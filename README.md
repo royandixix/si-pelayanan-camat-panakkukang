@@ -1,10 +1,6 @@
 # Sistem Informasi Pelayanan Masyarakat Kantor Camat Panakkukang
 
 > **Perancangan Sistem Informasi Pelayanan Masyarakat dengan Klasterisasi Jenis Layanan Menggunakan Metode K-Means untuk Optimasi Distribusi Pegawai**
->
-> Proposal Skripsi — Program Studi Sistem Informasi, Universitas Dipa Makassar (2026)
-> Oleh: **Ibnu Hajar Arsalli (221065)** & **Ardianto Raba (221157)**
-
 Sistem informasi pelayanan publik berbasis web untuk Kantor Camat Panakkukang, Kota Makassar. Sistem mencakup pelayanan online dari **lima seksi**, sistem **antrean digital FIFO**, serta **klasterisasi K-Means** terhadap volume layanan per seksi sebagai dasar **rekomendasi distribusi pegawai** bagi pimpinan.
 
 Repository ini berisi **back-end dan panel admin** (Laravel + Filament) yang menyediakan basis data MySQL, logika bisnis, serta dashboard admin/pimpinan.
