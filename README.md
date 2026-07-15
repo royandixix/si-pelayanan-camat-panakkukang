@@ -1,59 +1,106 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem Informasi Pelayanan Masyarakat Kantor Camat Panakkukang
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> **Perancangan Sistem Informasi Pelayanan Masyarakat dengan Klasterisasi Jenis Layanan Menggunakan Metode K-Means untuk Optimasi Distribusi Pegawai**
+>
+> Proposal Skripsi — Program Studi Sistem Informasi, Universitas Dipa Makassar (2026)
+> Oleh: **Ibnu Hajar Arsalli (221065)** & **Ardianto Raba (221157)**
 
-## About Laravel
+Sistem informasi pelayanan publik berbasis web untuk Kantor Camat Panakkukang, Kota Makassar. Sistem mencakup pelayanan online dari **lima seksi**, sistem **antrean digital FIFO**, serta **klasterisasi K-Means** terhadap volume layanan per seksi sebagai dasar **rekomendasi distribusi pegawai** bagi pimpinan.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Repository ini berisi **back-end dan panel admin** (Laravel + Filament) yang menyediakan basis data MySQL, logika bisnis, serta dashboard admin/pimpinan.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🎯 Latar Belakang Singkat
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Seluruh pelayanan di Kantor Camat Panakkukang selama ini masih konvensional: masyarakat harus datang langsung, pencatatan berbasis kertas, dan antrean menumpuk. Di sisi lain, pimpinan tidak memiliki data kuantitatif untuk menilai beban kerja tiap seksi, sehingga distribusi pegawai bersifat subjektif. Sistem ini menjawab dua masalah tersebut.
 
-## Learning Laravel
+## 👥 Aktor Sistem
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+| Aktor | Peran Utama |
+|---|---|
+| **Masyarakat** | Registrasi & login, mengajukan permohonan online, mengunggah dokumen, cek status & riwayat, mengambil nomor antrean digital, mencetak bukti |
+| **Admin Seksi** | Verifikasi permohonan, meminta perbaikan dokumen, menyetujui/menolak, memperbarui status, mengelola & memanggil antrean, mencetak laporan |
+| **Super Admin** | Kelola admin & reset password, kelola 5 seksi & penempatan admin, kelola jenis layanan/persyaratan/formulir, monitoring seluruh permohonan & antrean |
+| **Camat / Pimpinan** | Dashboard volume layanan per seksi, grafik bulanan, perbandingan beban kerja 5 seksi, hasil klasterisasi K-Means, rekomendasi distribusi pegawai, unduh laporan |
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🗂️ Sepuluh Jenis Layanan (5 Seksi)
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+| No | Jenis Layanan | Seksi |
+|---|---|---|
+| 1 | Keterangan Ahli Waris | Pemberdayaan Masyarakat & Kesejahteraan Sosial |
+| 2 | Izin Meneliti | Pemerintahan |
+| 3 | Konsultasi Pertanahan | Pemerintahan |
+| 4 | Konsultasi PPAT | Pemerintahan |
+| 5 | Pengaduan Masyarakat | Ketenteraman & Ketertiban Umum |
+| 6 | Rekomendasi Kegiatan | Seksi terkait |
+| 7 | Surat Pindah Masyarakat | Pelayanan (Front Office) |
+| 8 | Pembuatan KTP | Pelayanan (Front Office) |
+| 9 | Pembuatan / Pembaruan KK | Pelayanan (Front Office) |
+| 10 | Penjemputan Sampah | Kebersihan |
 
-## Agentic Development
+## 🔄 Alur Status Permohonan
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+`Diajukan → Menunggu Verifikasi → (Dokumen Perlu Diperbaiki) → Diproses → Disetujui / Ditolak → Selesai → Sudah Diambil`
+
+Setiap perubahan status tercatat dalam riwayat, termasuk catatan penolakan atau permintaan revisi dokumen.
+
+## 🎫 Antrean Digital (FIFO)
+
+- Berlaku khusus **Seksi Pelayanan (Front Office)**: Pembuatan KTP, Surat Pindah, dan Pembuatan/Pembaruan KK.
+- Kuota maksimal **30 nomor per hari** (A-001 s.d. A-030), diterbitkan berurutan sesuai waktu pendaftaran (*First In First Out*).
+- Jika kuota penuh, pendaftar otomatis dijadwalkan ke hari pelayanan berikutnya.
+- Admin memanggil nomor dari urutan terkecil dan menandai antrean selesai / tidak hadir.
+
+## 📊 Klasterisasi K-Means
+
+Volume penggunaan layanan per seksi (permohonan + antrean untuk Front Office) diklasterisasi menggunakan **K-Means Clustering**:
+
+| Klaster | Kategori | Interpretasi |
+|---|---|---|
+| C1 | Beban kerja tinggi | Membutuhkan tambahan pegawai |
+| C2 | Beban kerja sedang | Jumlah pegawai relatif mencukupi |
+| C3 | Beban kerja rendah | Pegawai dapat membantu seksi lain |
+
+Hasil klasterisasi ditampilkan pada dashboard pimpinan, terurut dari beban tertinggi, sebagai rekomendasi distribusi pegawai berbasis data. Kualitas klaster dievaluasi dengan **Confusion Matrix**, **Silhouette Score**, dan **Davies-Bouldin Index**.
+
+## 🛠️ Teknologi
+
+| Komponen | Keterangan |
+|---|---|
+| PHP | ^8.3 |
+| Laravel | ^13 — back-end & RESTful API |
+| Filament | ^5 — panel admin (Admin Seksi, Super Admin, Pimpinan) |
+| MySQL | basis data |
+| Pest | pengujian |
+
+## 🚀 Instalasi
 
 ```bash
-composer require laravel/boost --dev
+git clone https://github.com/USERNAME/si-pelayanan-camat-panakkukang.git
+cd si-pelayanan-camat-panakkukang
 
-php artisan boost:install
+composer install
+npm install
+
+cp .env.example .env
+php artisan key:generate
+# sesuaikan koneksi MySQL pada .env
+
+php artisan migrate --seed
+
+npm run build   # atau: npm run dev
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Panel admin dapat diakses melalui `http://localhost:8000/admin`.
 
-## Contributing
+## 🧪 Pengujian
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+php artisan test
+```
 
-## Code of Conduct
+Pengujian sistem dilakukan dengan **Black-Box Testing** untuk fungsionalitas, serta evaluasi K-Means menggunakan Confusion Matrix (Accuracy, Precision, Recall, F1-Score), Silhouette Score, dan Davies-Bouldin Index.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 📄 Lisensi
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# si-pelayanan-camat-panakkukang
+Proyek ini dikembangkan untuk keperluan penelitian skripsi. Kode sumber dilisensikan di bawah [MIT License](https://opensource.org/licenses/MIT).
