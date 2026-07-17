@@ -6,10 +6,10 @@ use Filament\Pages\Page;
 
 class LaporanRekapitulasi extends Page
 {
-    protected static string | \BackedEnum | null $navigationIcon =
+    protected static string|\BackedEnum|null $navigationIcon =
         'heroicon-o-document-chart-bar';
 
-    protected static string | \UnitEnum | null $navigationGroup =
+    protected static string|\UnitEnum|null $navigationGroup =
         'Analisis dan Laporan';
 
     protected static ?string $navigationLabel =
@@ -35,8 +35,18 @@ class LaporanRekapitulasi extends Page
     {
         return 'Ringkasan data pelayanan masyarakat berdasarkan periode, seksi, layanan, dan status permohonan.';
     }
+    
+    public static function getNavigationBadge(): ?string
+    {
+        return null;
+    }
 
     public static function canAccess(): bool
+    {
+        return auth()->user()?->isSuperAdmin() ?? false;
+    }
+
+    public static function shouldRegisterNavigation(): bool
     {
         return auth()->user()?->isSuperAdmin() ?? false;
     }

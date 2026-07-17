@@ -16,7 +16,11 @@ class ListServices extends ListRecords
     {
         return [
             CreateAction::make()
-                ->label('Tambah Layanan'),
+                ->label('Tambah Layanan')
+                ->visible(
+                    fn (): bool =>
+                        auth()->user()?->isSuperAdmin() ?? false,
+                ),
         ];
     }
 }

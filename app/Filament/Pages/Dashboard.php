@@ -6,28 +6,39 @@ use Filament\Pages\Dashboard as BaseDashboard;
 
 class Dashboard extends BaseDashboard
 {
-    protected static ?string $title = 'Dashboard Super Admin';
+    protected static ?string $navigationLabel = 'Dashboard';
+
+    protected static ?string $title = 'Dashboard';
+
+    protected static ?int $navigationSort = -2;
 
     public function getHeading(): string
     {
+        $user = auth()->user();
+
+        if ($user?->isAdminSeksi()) {
+            return 'Dashboard Admin Seksi';
+        }
+
         return 'Dashboard Super Admin';
     }
 
     public function getSubheading(): ?string
     {
-        return 'Ringkasan pelayanan masyarakat Kantor Camat Panakkukang.';
-    }
+        $user = auth()->user();
 
-    public function getColumns(): int | array
-    {
-        return [
-            'md' => 1,
-            'xl' => 2,
-        ];
+        if ($user?->isAdminSeksi()) {
+            return 'Ringkasan pelayanan pada ' . ($user->section?->name ?? 'seksi Anda') . '.';
+        }
+
+        return 'Ringkasan pelayanan masyarakat Kantor Camat Panakkukang.';
     }
 
     public static function canAccess(): bool
     {
-        return auth()->user()?->isSuperAdmin() ?? false;
+        $user = auth()->user();
+
+        return ($user?->isSuperAdmin() ?? false)
+            || ($user?->isAdminSeksi() ?? false);
     }
 }

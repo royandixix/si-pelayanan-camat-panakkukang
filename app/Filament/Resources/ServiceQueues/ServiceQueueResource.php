@@ -57,25 +57,52 @@ class ServiceQueueResource extends Resource
         return ServiceQueuesTable::configure($table);
     }
 
-    public static function getRelations(): array
-    {
-        return [];
-    }
-
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()
+        $query = parent::getEloquentQuery()
             ->with([
                 'application',
                 'user',
                 'section',
                 'service',
             ]);
+
+        $user = auth()->user();
+
+        if ($user?->isAdminSeksi()) {
+            $query->where(
+                'section_id',
+                $user->section_id,
+            );
+        }
+
+        return $query;
+    }
+
+    public static function canViewAny(): bool
+    {
+        $user = auth()->user();
+
+        return ($user?->isSuperAdmin() ?? false)
+            || ($user?->isAdminSeksi() ?? false);
     }
 
     public static function canCreate(): bool
     {
         return false;
+    }
+
+    public static function canView($record): bool
+    {
+        $user = auth()->user();
+
+        if ($user?->isSuperAdmin()) {
+            return true;
+        }
+
+        return ($user?->isAdminSeksi() ?? false)
+            && $user->section_id !== null
+            && $record->section_id === $user->section_id;
     }
 
     public static function canEdit($record): bool
@@ -91,6 +118,11 @@ class ServiceQueueResource extends Resource
     public static function canDeleteAny(): bool
     {
         return false;
+    }
+
+    public static function getRelations(): array
+    {
+        return [];
     }
 
     public static function getPages(): array

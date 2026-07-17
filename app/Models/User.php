@@ -13,7 +13,8 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements FilamentUser
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
 
     protected $fillable = [
         'name',
@@ -24,6 +25,7 @@ class User extends Authenticatable implements FilamentUser
         'phone',
         'address',
         'section_id',
+        'email_verified_at',
         'is_active',
     ];
 
@@ -49,7 +51,11 @@ class User extends Authenticatable implements FilamentUser
         }
 
         return match ($panel->getId()) {
-            'admin' => $this->role === UserRole::SUPER_ADMIN,
+            'admin' => in_array($this->role, [
+                UserRole::SUPER_ADMIN,
+                UserRole::ADMIN_SEKSI,
+            ], true),
+            'pimpinan'=>$this->role === UserRole::PIMPINAN, 
             default => false,
         };
     }
@@ -68,7 +74,7 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->hasMany(
             ServiceApplication::class,
-            'assigned_admin_id'
+            'assigned_admin_id',
         );
     }
 
@@ -79,7 +85,10 @@ class User extends Authenticatable implements FilamentUser
 
     public function kMeansRuns(): HasMany
     {
-        return $this->hasMany(KMeansRun::class, 'executed_by');
+        return $this->hasMany(
+            KMeansRun::class,
+            'executed_by',
+        );
     }
 
     public function hasRole(UserRole $role): bool

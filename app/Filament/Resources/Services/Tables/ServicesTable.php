@@ -81,7 +81,11 @@ class ServicesTable
                     ->label('Seksi')
                     ->relationship('section', 'name')
                     ->searchable()
-                    ->preload(),
+                    ->preload()
+                    ->visible(
+                        fn (): bool =>
+                            auth()->user()?->isSuperAdmin() ?? false,
+                    ),
 
                 TernaryFilter::make('queue_enabled')
                     ->label('Antrean Digital')
@@ -100,7 +104,11 @@ class ServicesTable
                     ->label('Lihat'),
 
                 EditAction::make()
-                    ->label('Ubah'),
+                    ->label('Ubah')
+                    ->visible(
+                        fn (): bool =>
+                            auth()->user()?->isSuperAdmin() ?? false,
+                    ),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -111,10 +119,16 @@ class ServicesTable
                         ->modalSubmitActionLabel('Hapus')
                         ->modalCancelActionLabel('Batal'),
                 ])
-                    ->label('Tindakan'),
+                    ->label('Tindakan')
+                    ->visible(
+                        fn (): bool =>
+                            auth()->user()?->isSuperAdmin() ?? false,
+                    ),
             ])
             ->emptyStateHeading('Belum ada data layanan')
-            ->emptyStateDescription('Tambahkan jenis layanan yang tersedia di Kantor Camat Panakkukang.')
+            ->emptyStateDescription(
+                'Belum ada layanan yang tersedia pada seksi ini.',
+            )
             ->emptyStateIcon('heroicon-o-rectangle-stack');
     }
 }
