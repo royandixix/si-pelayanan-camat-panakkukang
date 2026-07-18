@@ -11,17 +11,18 @@ use Illuminate\Support\Facades\Auth;
 
 class PimpinanApplicationStatusChart extends ChartWidget
 {
-    protected static ?int $sort=2;
+    protected static ?int $sort = 2;
 
-    protected int|string|array $columnSpan=1;
+    protected int|string|array $columnSpan = 1;
 
-    protected ?string $heading='Distribusi Status Permohonan';
+    protected ?string $heading = 'Distribusi Status Permohonan';
 
-    protected ?string $description='Komposisi seluruh permohonan berdasarkan status pelayanan.';
+    protected ?string $description =
+        'Komposisi seluruh permohonan berdasarkan status pelayanan.';
 
     protected function getData(): array
     {
-        $statuses=[
+        $statuses = [
             ApplicationStatus::SUBMITTED,
             ApplicationStatus::VERIFICATION,
             ApplicationStatus::REVISION,
@@ -32,19 +33,20 @@ class PimpinanApplicationStatusChart extends ChartWidget
             ApplicationStatus::REJECTED,
         ];
 
-        $data=array_map(
-            fn(ApplicationStatus $status): int=>ServiceApplication::query()
-                ->where('status',$status)
-                ->count(),
+        $data = array_map(
+            fn (ApplicationStatus $status): int =>
+                ServiceApplication::query()
+                    ->where('status', '=', $status->value, 'and')
+                    ->count('*'),
             $statuses,
         );
 
         return [
-            'datasets'=>[
+            'datasets' => [
                 [
-                    'label'=>'Jumlah Permohonan',
-                    'data'=>$data,
-                    'backgroundColor'=>[
+                    'label' => 'Jumlah Permohonan',
+                    'data' => $data,
+                    'backgroundColor' => [
                         '#3b82f6',
                         '#f59e0b',
                         '#fb923c',
@@ -54,11 +56,12 @@ class PimpinanApplicationStatusChart extends ChartWidget
                         '#10b981',
                         '#ef4444',
                     ],
-                    'borderWidth'=>2,
+                    'borderWidth' => 2,
                 ],
             ],
-            'labels'=>array_map(
-                fn(ApplicationStatus $status): string=>(string)$status->getLabel(),
+            'labels' => array_map(
+                fn (ApplicationStatus $status): string =>
+                    (string) $status->getLabel(),
                 $statuses,
             ),
         ];
@@ -69,11 +72,28 @@ class PimpinanApplicationStatusChart extends ChartWidget
         return 'doughnut';
     }
 
+    protected function getOptions(): array
+    {
+        return [
+            'responsive' => true,
+            'maintainAspectRatio' => false,
+            'plugins' => [
+                'legend' => [
+                    'position' => 'bottom',
+                    'labels' => [
+                        'boxWidth' => 12,
+                        'padding' => 14,
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public static function canView(): bool
     {
-        $user=Auth::user();
+        $user = Auth::user();
 
         return $user instanceof User
-            && $user->role===UserRole::PIMPINAN;
+            && $user->role === UserRole::PIMPINAN;
     }
 }

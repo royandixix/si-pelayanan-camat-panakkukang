@@ -7,9 +7,9 @@ use Filament\Resources\Pages\ListRecords;
 
 class ListKMeansResults extends ListRecords
 {
-    protected static string $resource=KMeansResultResource::class;
+    protected static string $resource = KMeansResultResource::class;
 
-    protected static ?string $title='Analisis K-Means';
+    protected static ?string $title = 'Analisis K-Means';
 
     protected function getHeaderActions(): array
     {

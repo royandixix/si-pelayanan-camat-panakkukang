@@ -4,7 +4,7 @@ namespace App\Filament\Pimpinan\Resources\Sections;
 
 use App\Filament\Pimpinan\Resources\Sections\Pages\ListSections;
 use App\Filament\Pimpinan\Resources\Sections\Pages\ViewSection;
-use App\Filament\Pimpinan\Resources\Sections\Schemas\SectionForm;
+use App\Filament\Pimpinan\Resources\Sections\Schemas\SectionInfolist;
 use App\Filament\Pimpinan\Resources\Sections\Tables\SectionsTable;
 use App\Models\Section;
 use Filament\Resources\Resource;
@@ -14,27 +14,36 @@ use Illuminate\Database\Eloquent\Model;
 
 class SectionResource extends Resource
 {
-    protected static ?string $model=Section::class;
+    protected static ?string $model = Section::class;
 
-    protected static string|\BackedEnum|null $navigationIcon='heroicon-o-building-office-2';
+    protected static string|\BackedEnum|null $navigationIcon =
+        'heroicon-o-building-office-2';
 
-    protected static string|\UnitEnum|null $navigationGroup='Monitoring Pelayanan';
+    protected static string|\UnitEnum|null $navigationGroup =
+        'Monitoring Pelayanan';
 
-    protected static ?string $navigationLabel='Data Seksi';
+    protected static ?string $navigationLabel = 'Data Seksi';
 
-    protected static ?string $modelLabel='Seksi';
+    protected static ?string $modelLabel = 'Seksi';
 
-    protected static ?string $pluralModelLabel='Data Seksi';
+    protected static ?string $pluralModelLabel = 'Data Seksi';
 
-    protected static ?string $recordTitleAttribute='name';
+    protected static ?string $recordTitleAttribute = 'name';
 
-    protected static ?string $slug='data-seksi';
+    protected static ?string $slug = 'data-seksi';
 
-    protected static ?int $navigationSort=2;
+    protected static ?int $navigationSort = 2;
+
+    protected static bool $hasTitleCaseModelLabel = false;
 
     public static function form(Schema $schema): Schema
     {
-        return SectionForm::configure($schema);
+        return $schema;
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return SectionInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table
@@ -42,16 +51,11 @@ class SectionResource extends Resource
         return SectionsTable::configure($table);
     }
 
-    public static function getRelations(): array
-    {
-        return [];
-    }
-
     public static function getPages(): array
     {
         return [
-            'index'=>ListSections::route('/'),
-            'view'=>ViewSection::route('/{record}'),
+            'index' => ListSections::route('/'),
+            'view' => ViewSection::route('/{record}'),
         ];
     }
 

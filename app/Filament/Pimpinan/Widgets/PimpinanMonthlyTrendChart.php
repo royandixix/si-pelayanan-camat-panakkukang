@@ -11,48 +11,60 @@ use Illuminate\Support\Facades\Auth;
 
 class PimpinanMonthlyTrendChart extends ChartWidget
 {
-    protected static ?int $sort=4;
+    protected static ?int $sort = 4;
 
-    protected int|string|array $columnSpan='full';
+    protected int|string|array $columnSpan = 'full';
 
-    protected ?string $heading='Tren Permohonan Enam Bulan Terakhir';
+    protected ?string $heading = 'Tren Permohonan Enam Bulan Terakhir';
 
-    protected ?string $description='Perkembangan jumlah permohonan pelayanan setiap bulan.';
+    protected ?string $description =
+        'Perkembangan jumlah permohonan pelayanan setiap bulan.';
 
     protected function getData(): array
     {
-        $months=collect(range(5,0))
-            ->map(fn(int $month): Carbon=>now()->startOfMonth()->subMonths($month));
+        $months = collect(range(5, 0))
+            ->map(
+                fn (int $month): Carbon =>
+                    now()->startOfMonth()->subMonths($month),
+            );
 
-        $labels=$months
-            ->map(fn(Carbon $month): string=>$month->translatedFormat('M Y'))
+        $labels = $months
+            ->map(
+                fn (Carbon $month): string =>
+                    $month->translatedFormat('M Y'),
+            )
             ->all();
 
-        $data=$months
-            ->map(function(Carbon $month): int {
+        $data = $months
+            ->map(function (Carbon $month): int {
                 return ServiceApplication::query()
-                    ->whereBetween('created_at',[
-                        $month->copy()->startOfMonth(),
-                        $month->copy()->endOfMonth(),
-                    ])
-                    ->count();
+                    ->whereBetween(
+                        'created_at',
+                        [
+                            $month->copy()->startOfMonth(),
+                            $month->copy()->endOfMonth(),
+                        ],
+                        'and',
+                        false,
+                    )
+                    ->count('*');
             })
             ->all();
 
         return [
-            'datasets'=>[
+            'datasets' => [
                 [
-                    'label'=>'Jumlah Permohonan',
-                    'data'=>$data,
-                    'borderColor'=>'#2563eb',
-                    'backgroundColor'=>'rgba(37,99,235,0.15)',
-                    'fill'=>true,
-                    'tension'=>0.35,
-                    'pointRadius'=>4,
-                    'pointHoverRadius'=>6,
+                    'label' => 'Jumlah Permohonan',
+                    'data' => $data,
+                    'borderColor' => '#2563eb',
+                    'backgroundColor' => 'rgba(37,99,235,0.15)',
+                    'fill' => true,
+                    'tension' => 0.35,
+                    'pointRadius' => 4,
+                    'pointHoverRadius' => 6,
                 ],
             ],
-            'labels'=>$labels,
+            'labels' => $labels,
         ];
     }
 
@@ -64,16 +76,17 @@ class PimpinanMonthlyTrendChart extends ChartWidget
     protected function getOptions(): array
     {
         return [
-            'plugins'=>[
-                'legend'=>[
-                    'display'=>false,
+            'responsive' => true,
+            'plugins' => [
+                'legend' => [
+                    'display' => false,
                 ],
             ],
-            'scales'=>[
-                'y'=>[
-                    'beginAtZero'=>true,
-                    'ticks'=>[
-                        'precision'=>0,
+            'scales' => [
+                'y' => [
+                    'beginAtZero' => true,
+                    'ticks' => [
+                        'precision' => 0,
                     ],
                 ],
             ],
@@ -82,9 +95,9 @@ class PimpinanMonthlyTrendChart extends ChartWidget
 
     public static function canView(): bool
     {
-        $user=Auth::user();
+        $user = Auth::user();
 
         return $user instanceof User
-            && $user->role===UserRole::PIMPINAN;
+            && $user->role === UserRole::PIMPINAN;
     }
 }

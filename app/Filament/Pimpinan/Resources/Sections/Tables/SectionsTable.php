@@ -2,10 +2,12 @@
 
 namespace App\Filament\Pimpinan\Resources\Sections\Tables;
 
+use App\Models\Section;
+use App\Models\ServiceApplication;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class SectionsTable
@@ -14,55 +16,93 @@ class SectionsTable
     {
         return $table
             ->columns([
+                TextColumn::make('code')
+                    ->label('Kode')
+                    ->searchable()
+                    ->sortable()
+                    ->badge()
+                    ->color('gray'),
+
                 TextColumn::make('name')
                     ->label('Nama Seksi')
                     ->searchable()
                     ->sortable()
-                    ->weight('semibold')
-                    ->color('primary'),
-
-                TextColumn::make('description')
-                    ->label('Deskripsi')
-                    ->limit(80)
                     ->wrap()
-                    ->placeholder('-'),
+                    ->weight('semibold'),
+
+                TextColumn::make('employee_count')
+                    ->label('Jumlah Pegawai')
+                    ->numeric()
+                    ->sortable()
+                    ->alignCenter(),
+
+                TextColumn::make('services_total')
+                    ->label('Jumlah Layanan')
+                    ->state(
+                        fn (Section $record): int =>
+                            $record->services()->count(),
+                    )
+                    ->alignCenter(),
+
+                TextColumn::make('applications_total')
+                    ->label('Total Permohonan')
+                    ->state(
+                        fn (Section $record): int =>
+                            ServiceApplication::query()
+                                ->whereHas(
+                                    'service',
+                                    fn ($query) =>
+                                        $query->where(
+                                            'section_id',
+                                            $record->id,
+                                        ),
+                                )
+                                ->count(),
+                    )
+                    ->alignCenter()
+                    ->color('primary')
+                    ->weight('bold'),
+
+                TextColumn::make('queues_total')
+                    ->label('Total Antrean')
+                    ->state(
+                        fn (Section $record): int =>
+                            $record->queues()->count(),
+                    )
+                    ->alignCenter(),
+
+                TextColumn::make('daily_queue_quota')
+                    ->label('Kuota Antrean Harian')
+                    ->numeric()
+                    ->placeholder('Tidak menggunakan antrean')
+                    ->alignCenter(),
 
                 IconColumn::make('is_active')
                     ->label('Status Aktif')
                     ->boolean()
-                    ->trueColor('success')
-                    ->falseColor('danger'),
-
-                TextColumn::make('created_at')
-                    ->label('Dibuat')
-                    ->dateTime('d M Y H:i')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault:true),
-
-                TextColumn::make('updated_at')
-                    ->label('Diperbarui')
-                    ->dateTime('d M Y H:i')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault:true),
+                    ->alignCenter(),
             ])
             ->filters([
-                TernaryFilter::make('is_active')
+                SelectFilter::make('is_active')
                     ->label('Status Seksi')
-                    ->trueLabel('Seksi Aktif')
-                    ->falseLabel('Seksi Tidak Aktif')
-                    ->native(false),
+                    ->options([
+                        '1' => 'Aktif',
+                        '0' => 'Tidak Aktif',
+                    ]),
             ])
             ->recordActions([
                 ViewAction::make()
-                    ->label('Lihat')
+                    ->label('Detail')
                     ->icon('heroicon-o-eye')
                     ->color('primary'),
             ])
             ->toolbarActions([])
             ->defaultSort('name')
-            ->paginationPageOptions([10,25,50])
+            ->paginationPageOptions([5, 10, 25])
             ->emptyStateHeading('Belum ada data seksi')
-            ->emptyStateDescription('Data seksi Kantor Camat akan tampil di halaman ini.')
+            ->emptyStateDescription(
+                'Data lima seksi Kantor Camat Panakkukang akan tampil di sini.',
+            )
             ->emptyStateIcon('heroicon-o-building-office-2');
     }
 }
