@@ -24,11 +24,13 @@ class ServiceReportResource extends Resource
 
     protected static ?string $pluralModelLabel='Laporan Pelayanan';
 
-    protected static ?string $recordTitleAttribute='application_number';
+    protected static ?string $recordTitleAttribute='registration_number';
 
     protected static ?string $slug='laporan-pelayanan';
 
     protected static ?int $navigationSort=1;
+
+    protected static bool $hasTitleCaseModelLabel=false;
 
     public static function form(Schema $schema): Schema
     {

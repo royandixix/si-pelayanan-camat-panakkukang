@@ -1,23 +1,44 @@
 <?php
 
-namespace App\Filament\Pimpinan\Resources\ServiceApplications\Tables;
+namespace App\Filament\Pimpinan\Widgets;
 
 use App\Enums\ApplicationStatus;
-use Filament\Actions\ViewAction;
+use App\Enums\UserRole;
+use App\Filament\Pimpinan\Resources\ServiceApplications\ServiceApplicationResource;
+use App\Models\ServiceApplication;
+use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Filament\Widgets\TableWidget;
+use Illuminate\Support\Facades\Auth;
 
-class ServiceApplicationsTable
+class PimpinanLatestApplications extends TableWidget
 {
-    public static function configure(Table $table): Table
+    protected static ?int $sort=5;
+
+    protected int|string|array $columnSpan='full';
+
+    protected static ?string $heading='Permohonan Terbaru';
+
+    public function table(Table $table): Table
     {
         return $table
+            ->query(
+                ServiceApplication::query()
+                    ->with([
+                        'user',
+                        'service',
+                        'service.section',
+                        'assignedAdmin',
+                    ])
+                    ->latest('created_at')
+                    ->limit(10),
+            )
             ->columns([
                 TextColumn::make('registration_number')
                     ->label('Nomor Permohonan')
                     ->searchable()
-                    ->sortable()
                     ->copyable()
                     ->weight('semibold')
                     ->color('primary'),
@@ -25,15 +46,7 @@ class ServiceApplicationsTable
                 TextColumn::make('user.name')
                     ->label('Nama Pemohon')
                     ->searchable()
-                    ->sortable()
                     ->placeholder('-'),
-
-                TextColumn::make('user.nik')
-                    ->label('NIK')
-                    ->searchable()
-                    ->copyable()
-                    ->placeholder('-')
-                    ->toggleable(),
 
                 TextColumn::make('service.name')
                     ->label('Jenis Layanan')
@@ -43,9 +56,13 @@ class ServiceApplicationsTable
 
                 TextColumn::make('service.section.name')
                     ->label('Seksi')
-                    ->searchable()
                     ->wrap()
                     ->placeholder('-'),
+
+                TextColumn::make('assignedAdmin.name')
+                    ->label('Petugas')
+                    ->placeholder('Belum ditugaskan')
+                    ->toggleable(),
 
                 TextColumn::make('status')
                     ->label('Status')
@@ -79,60 +96,35 @@ class ServiceApplicationsTable
                         };
                     }),
 
-                TextColumn::make('assignedAdmin.name')
-                    ->label('Petugas')
-                    ->placeholder('Belum ditugaskan')
-                    ->toggleable(),
-
-                TextColumn::make('submitted_at')
-                    ->label('Tanggal Pengajuan')
-                    ->dateTime('d M Y H:i')
-                    ->placeholder('-')
-                    ->sortable(),
-
-                TextColumn::make('completed_at')
-                    ->label('Tanggal Selesai')
-                    ->dateTime('d M Y H:i')
-                    ->placeholder('Belum selesai')
-                    ->sortable()
-                    ->toggleable(),
-
                 TextColumn::make('created_at')
-                    ->label('Dibuat')
+                    ->label('Tanggal')
                     ->dateTime('d M Y H:i')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault:true),
-            ])
-            ->filters([
-                SelectFilter::make('status')
-                    ->label('Status Permohonan')
-                    ->options(
-                        collect(ApplicationStatus::cases())
-                            ->mapWithKeys(
-                                fn(ApplicationStatus $status): array=>[
-                                    $status->value=>(string)$status->getLabel(),
-                                ],
-                            )
-                            ->all(),
-                    ),
-
-                SelectFilter::make('service_id')
-                    ->label('Jenis Layanan')
-                    ->relationship('service','name')
-                    ->searchable()
-                    ->preload(),
+                    ->sortable(),
             ])
             ->recordActions([
-                ViewAction::make()
+                Action::make('lihat')
                     ->label('Lihat')
                     ->icon('heroicon-o-eye')
-                    ->color('primary'),
+                    ->color('primary')
+                    ->url(
+                        fn(ServiceApplication $record): string=>
+                            ServiceApplicationResource::getUrl(
+                                'view',
+                                ['record'=>$record],
+                            ),
+                    ),
             ])
-            ->toolbarActions([])
-            ->defaultSort('created_at','desc')
-            ->paginationPageOptions([10,25,50,100])
+            ->paginated(false)
             ->emptyStateHeading('Belum ada permohonan')
-            ->emptyStateDescription('Data permohonan pelayanan akan tampil di halaman ini.')
-            ->emptyStateIcon('heroicon-o-document-magnifying-glass');
+            ->emptyStateDescription('Permohonan terbaru akan tampil di sini.')
+            ->emptyStateIcon('heroicon-o-document-text');
+    }
+
+    public static function canView(): bool
+    {
+        $user=Auth::user();
+
+        return $user instanceof User
+            && $user->role===UserRole::PIMPINAN;
     }
 }

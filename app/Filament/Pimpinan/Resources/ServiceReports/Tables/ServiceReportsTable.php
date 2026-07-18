@@ -16,7 +16,7 @@ class ServiceReportsTable
     {
         return $table
             ->columns([
-                TextColumn::make('application_number')
+                TextColumn::make('registration_number')
                     ->label('Nomor Permohonan')
                     ->searchable()
                     ->sortable()
@@ -24,9 +24,15 @@ class ServiceReportsTable
                     ->weight('semibold')
                     ->color('primary'),
 
-                TextColumn::make('applicant.name')
-                    ->label('Pemohon')
+                TextColumn::make('user.name')
+                    ->label('Nama Pemohon')
                     ->searchable()
+                    ->placeholder('-'),
+
+                TextColumn::make('user.nik')
+                    ->label('NIK')
+                    ->searchable()
+                    ->copyable()
                     ->placeholder('-'),
 
                 TextColumn::make('service.name')
@@ -62,14 +68,18 @@ class ServiceReportsTable
                             'submitted'=>'info',
                             'verification'=>'warning',
                             'revision'=>'warning',
-                            'processing'=>'primary',
                             'approved'=>'success',
+                            'processing'=>'primary',
                             'completed'=>'success',
                             'collected'=>'success',
                             'rejected'=>'danger',
                             default=>'gray',
                         };
                     }),
+
+                TextColumn::make('assignedAdmin.name')
+                    ->label('Petugas')
+                    ->placeholder('-'),
 
                 TextColumn::make('submitted_at')
                     ->label('Tanggal Pengajuan')
@@ -117,13 +127,13 @@ class ServiceReportsTable
                         return $query
                             ->when(
                                 $data['tanggal_mulai']??null,
-                                fn(Builder $query,string $date): Builder=>$query
-                                    ->whereDate('submitted_at','>=',$date),
+                                fn(Builder $query,string $date): Builder=>
+                                    $query->whereDate('submitted_at','>=',$date),
                             )
                             ->when(
                                 $data['tanggal_selesai']??null,
-                                fn(Builder $query,string $date): Builder=>$query
-                                    ->whereDate('submitted_at','<=',$date),
+                                fn(Builder $query,string $date): Builder=>
+                                    $query->whereDate('submitted_at','<=',$date),
                             );
                     }),
             ])

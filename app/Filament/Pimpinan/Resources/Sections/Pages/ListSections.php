@@ -14,5 +14,5 @@ class ListSections extends ListRecords
     protected function getHeaderActions(): array
     {
         return [];
-    }
+    } 
 }

@@ -3,6 +3,7 @@
 namespace App\Filament\Pimpinan\Widgets;
 
 use App\Enums\ApplicationStatus;
+use App\Enums\UserRole;
 use App\Models\ServiceApplication;
 use App\Models\User;
 use Filament\Widgets\ChartWidget;
@@ -10,9 +11,13 @@ use Illuminate\Support\Facades\Auth;
 
 class PimpinanApplicationStatusChart extends ChartWidget
 {
-    protected ?string $heading='Distribusi Status Permohonan';
-    protected ?string $description='Komposisi seluruh permohonan berdasarkan status pelayanan.';
+    protected static ?int $sort=2;
+
     protected int|string|array $columnSpan=1;
+
+    protected ?string $heading='Distribusi Status Permohonan';
+
+    protected ?string $description='Komposisi seluruh permohonan berdasarkan status pelayanan.';
 
     protected function getData(): array
     {
@@ -27,18 +32,33 @@ class PimpinanApplicationStatusChart extends ChartWidget
             ApplicationStatus::REJECTED,
         ];
 
+        $data=array_map(
+            fn(ApplicationStatus $status): int=>ServiceApplication::query()
+                ->where('status',$status)
+                ->count(),
+            $statuses,
+        );
+
         return [
             'datasets'=>[
                 [
-                    'label'=>'Permohonan',
-                    'data'=>array_map(
-                        fn(ApplicationStatus $status): int=>ServiceApplication::where('status',$status)->count(),
-                        $statuses,
-                    ),
+                    'label'=>'Jumlah Permohonan',
+                    'data'=>$data,
+                    'backgroundColor'=>[
+                        '#3b82f6',
+                        '#f59e0b',
+                        '#fb923c',
+                        '#14b8a6',
+                        '#0ea5e9',
+                        '#22c55e',
+                        '#10b981',
+                        '#ef4444',
+                    ],
+                    'borderWidth'=>2,
                 ],
             ],
             'labels'=>array_map(
-                fn(ApplicationStatus $status): string=>$status->label(),
+                fn(ApplicationStatus $status): string=>(string)$status->getLabel(),
                 $statuses,
             ),
         ];
@@ -53,6 +73,7 @@ class PimpinanApplicationStatusChart extends ChartWidget
     {
         $user=Auth::user();
 
-        return $user instanceof User&&$user->isPimpinan();
+        return $user instanceof User
+            && $user->role===UserRole::PIMPINAN;
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pimpinan\Widgets\PimpinanApplicationStatusChart;
+use App\Filament\Pimpinan\Widgets\PimpinanLatestApplications;
+use App\Filament\Pimpinan\Widgets\PimpinanMonthlyTrendChart;
 use App\Filament\Pimpinan\Widgets\PimpinanSectionWorkloadChart;
 use App\Filament\Pimpinan\Widgets\PimpinanStatsOverview;
 use Filament\Enums\ThemeMode;
@@ -32,28 +34,26 @@ class PimpinanPanelProvider extends PanelProvider
             ->brandName('Pelayanan Camat Panakkukang')
             ->defaultThemeMode(ThemeMode::System)
             ->colors([
-                'primary' => Color::Blue,
+                'primary'=>Color::Blue,
             ])
             ->sidebarCollapsibleOnDesktop()
             ->discoverResources(
-                in: app_path('Filament/Pimpinan/Resources'),
-                for: 'App\\Filament\\Pimpinan\\Resources',
+                in:app_path('Filament/Pimpinan/Resources'),
+                for:'App\\Filament\\Pimpinan\\Resources',
             )
             ->discoverPages(
-                in: app_path('Filament/Pimpinan/Pages'),
-                for: 'App\\Filament\\Pimpinan\\Pages',
+                in:app_path('Filament/Pimpinan/Pages'),
+                for:'App\\Filament\\Pimpinan\\Pages',
             )
             ->pages([
                 Dashboard::class,
             ])
-            ->discoverWidgets(
-                in: app_path('Filament/Pimpinan/Widgets'),
-                for: 'App\\Filament\\Pimpinan\\Widgets',
-            )
             ->widgets([
                 PimpinanStatsOverview::class,
                 PimpinanApplicationStatusChart::class,
                 PimpinanSectionWorkloadChart::class,
+                PimpinanMonthlyTrendChart::class,
+                PimpinanLatestApplications::class,
             ])
             ->middleware([
                 EncryptCookies::class,
