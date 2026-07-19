@@ -1,0 +1,5 @@
+1.hapus button edit 
+2.di admin unutk masayrakat di halaman admin masin2 seksi/divisi login pake nik aja
+sama password nanti super admin yg buatkan 
+3. di halaman masayrakat di tambhkan pop up unutk deskripsi syarat layanan/pengajuan
+

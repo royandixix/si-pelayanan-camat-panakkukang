@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\ServiceApplications\Pages;
 
 use App\Enums\ApplicationStatus;
+use App\Filament\Actions\UploadApplicationResultAction;
 use App\Filament\Resources\ServiceApplications\ServiceApplicationResource;
 use App\Services\ApplicationWorkflowService;
 use Filament\Actions\Action;
@@ -71,9 +72,11 @@ class ViewServiceApplication extends ViewRecord
                 [ApplicationStatus::APPROVED],
             ),
 
+            UploadApplicationResultAction::make(),
+
             $this->statusAction(
                 'complete',
-                'Selesaikan',
+                'Selesaikan Tanpa Dokumen Hasil',
                 ApplicationStatus::COMPLETED,
                 'heroicon-o-check-badge',
                 'success',
@@ -121,13 +124,19 @@ class ViewServiceApplication extends ViewRecord
             ->modalHeading($label)
             ->modalSubmitActionLabel($label)
             ->modalCancelActionLabel('Batal')
-            ->action(function (array $data) use ($targetStatus, $label): void {
-                app(ApplicationWorkflowService::class)->changeStatus(
-                    $this->record,
-                    $targetStatus,
-                    auth()->user(),
-                    $data['notes'] ?? null,
-                );
+            ->action(function (
+                array $data,
+            ) use (
+                $targetStatus,
+                $label,
+            ): void {
+                app(ApplicationWorkflowService::class)
+                    ->changeStatus(
+                        $this->record,
+                        $targetStatus,
+                        auth()->user(),
+                        $data['notes'] ?? null,
+                    );
 
                 $this->record->refresh();
 

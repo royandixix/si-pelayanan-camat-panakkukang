@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+
 use App\Enums\ApplicationStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -53,22 +54,41 @@ class ServiceApplication extends Model
 
     public function assignedAdmin(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'assigned_admin_id');
+        return $this->belongsTo(
+            User::class,
+            'assigned_admin_id',
+        );
     }
 
     public function documents(): HasMany
     {
-        return $this->hasMany(ApplicationDocument::class, 'application_id');
+        return $this->hasMany(
+            ApplicationDocument::class,
+            'application_id',
+        );
     }
 
     public function statusHistories(): HasMany
     {
-        return $this->hasMany(ApplicationStatusHistory::class, 'application_id')
-            ->latest('created_at');
+        return $this->hasMany(
+            ApplicationStatusHistory::class,
+            'application_id',
+        )->latest('created_at');
     }
 
     public function queue(): HasOne
     {
-        return $this->hasOne(ServiceQueue::class, 'application_id');
+        return $this->hasOne(
+            ServiceQueue::class,
+            'application_id',
+        );
+    }
+
+    public function result(): HasOne
+    {
+        return $this->hasOne(
+            ApplicationResult::class,
+            'application_id',
+        );
     }
 }

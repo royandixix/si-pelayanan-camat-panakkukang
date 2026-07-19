@@ -13,8 +13,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements FilamentUser
 {
-    use HasFactory;
-    use Notifiable;
+    use HasFactory, Notifiable;
 
     protected $fillable = [
         'name',
@@ -24,6 +23,7 @@ class User extends Authenticatable implements FilamentUser
         'nik',
         'phone',
         'address',
+        'profile_photo',
         'section_id',
         'email_verified_at',
         'is_active',
@@ -51,11 +51,15 @@ class User extends Authenticatable implements FilamentUser
         }
 
         return match ($panel->getId()) {
-            'admin' => in_array($this->role, [
-                UserRole::SUPER_ADMIN,
-                UserRole::ADMIN_SEKSI,
-            ], true),
-            'pimpinan'=>$this->role === UserRole::PIMPINAN, 
+            'admin' => in_array(
+                $this->role,
+                [
+                    UserRole::SUPER_ADMIN,
+                    UserRole::ADMIN_SEKSI,
+                ],
+                true,
+            ),
+            'pimpinan' => $this->role === UserRole::PIMPINAN,
             default => false,
         };
     }

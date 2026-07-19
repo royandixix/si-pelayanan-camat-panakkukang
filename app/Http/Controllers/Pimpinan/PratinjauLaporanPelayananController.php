@@ -17,7 +17,7 @@ use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class ServiceReportPreviewController extends Controller
+class PratinjauLaporanPelayananController extends Controller
 {
     public function previewCsv(Request $request): View
     {
@@ -28,7 +28,7 @@ class ServiceReportPreviewController extends Controller
             ->orderByDesc('submitted_at')
             ->get();
 
-        return view('pimpinan.reports.service-preview', [
+        return view('pimpinan.laporan.pratinjau-pelayanan', [
             'records' => $records,
             'summary' => $this->summary($records),
             'filterDescription' => $this->filterDescription($filters),
@@ -144,7 +144,7 @@ class ServiceReportPreviewController extends Controller
         array $filters,
     ) {
         return Pdf::loadView(
-            'pimpinan.reports.service-pdf',
+            'pimpinan.laporan.pelayanan-pdf',
             [
                 'records' => $records,
                 'summary' => $this->summary($records),
