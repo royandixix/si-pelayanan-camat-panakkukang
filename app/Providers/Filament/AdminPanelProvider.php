@@ -11,7 +11,7 @@ use App\Filament\Widgets\AdminSeksiStatsOverview;
 use App\Filament\Widgets\AdminStatsOverview;
 use App\Filament\Widgets\ApplicationStatusChart;
 use App\Filament\Widgets\ServiceVolumeChart;
-use Filament\Http\Middleware\Authenticate;
+use App\Http\Middleware\AuthenticateFilament;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -33,7 +33,6 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
             ->brandName('Pelayanan Camat Panakkukang')
             ->colors([
                 'primary' => Color::Blue,
@@ -68,7 +67,7 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
-                Authenticate::class,
+                AuthenticateFilament::class,
             ]);
     }
 }

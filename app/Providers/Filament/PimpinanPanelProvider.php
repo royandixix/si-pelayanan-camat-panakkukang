@@ -8,8 +8,8 @@ use App\Filament\Pimpinan\Widgets\PimpinanLatestKMeansResults;
 use App\Filament\Pimpinan\Widgets\PimpinanMonthlyTrendChart;
 use App\Filament\Pimpinan\Widgets\PimpinanSectionWorkloadChart;
 use App\Filament\Pimpinan\Widgets\PimpinanStatsOverview;
+use App\Http\Middleware\AuthenticateFilament;
 use Filament\Enums\ThemeMode;
-use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -31,7 +31,6 @@ class PimpinanPanelProvider extends PanelProvider
         return $panel
             ->id('pimpinan')
             ->path('pimpinan')
-            ->login()
             ->brandName('Pelayanan Camat Panakkukang')
             ->defaultThemeMode(ThemeMode::System)
             ->colors([
@@ -69,7 +68,7 @@ class PimpinanPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
-                Authenticate::class,
+                AuthenticateFilament::class,
             ]);
     }
 }

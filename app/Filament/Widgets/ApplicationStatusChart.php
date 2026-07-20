@@ -2,26 +2,22 @@
 
 namespace App\Filament\Widgets;
 
-use App\Enums\ApplicationStatus;
 use App\Models\ServiceApplication;
 use Filament\Widgets\ChartWidget;
 
 class ApplicationStatusChart extends ChartWidget
 {
-    protected ?string $heading =
-        'Distribusi Status Permohonan';
+    protected ?string $heading = 'Distribusi Status Permohonan';
 
     protected static ?int $sort = 3;
 
-    protected int|string|array $columnSpan = 1;
+    protected int|string|array $columnSpan = 'full';
 
-    protected ?string $pollingInterval = '60s';
+    protected ?string $maxHeight = '360px';
 
-    protected ?string $maxHeight = '330px';
+    protected ?string $pollingInterval = null;
 
     protected static bool $isLazy = false;
-
-    protected bool $isCollapsible = true;
 
     public function getDescription(): ?string
     {
@@ -30,58 +26,85 @@ class ApplicationStatusChart extends ChartWidget
 
     protected function getData(): array
     {
-        $statuses = [
-            ApplicationStatus::SUBMITTED->value =>
-                'Diajukan',
-
-            ApplicationStatus::VERIFICATION->value =>
-                'Menunggu Verifikasi',
-
-            ApplicationStatus::REVISION->value =>
-                'Dokumen Perlu Diperbaiki',
-
-            ApplicationStatus::PROCESSING->value =>
-                'Diproses',
-
-            ApplicationStatus::APPROVED->value =>
-                'Disetujui',
-
-            ApplicationStatus::REJECTED->value =>
-                'Ditolak',
-
-            ApplicationStatus::COMPLETED->value =>
-                'Selesai',
+        $daftarStatus = [
+            'draft' => 'Draf',
+            'submitted' => 'Diajukan',
+            'verification' => 'Verifikasi',
+            'revision' => 'Perlu Revisi',
+            'processing' => 'Diproses',
+            'approved' => 'Disetujui',
+            'rejected' => 'Ditolak',
+            'completed' => 'Selesai',
+            'collected' => 'Diambil',
         ];
 
-        $counts = ServiceApplication::query()
-            ->selectRaw('status, COUNT(*) AS total')
+        $jumlahStatus = ServiceApplication::query()
+            ->selectRaw('status, COUNT(*) as total')
+            ->whereIn(
+                'status',
+                array_keys($daftarStatus),
+            )
             ->groupBy('status')
-            ->pluck('total', 'status');
+            ->pluck(
+                'total',
+                'status',
+            );
+
+        $label = [];
+        $data = [];
+        $warna = [];
+
+        $daftarWarna = [
+            'draft' => 'rgba(100, 116, 139, 0.85)',
+            'submitted' => 'rgba(59, 130, 246, 0.85)',
+            'verification' => 'rgba(245, 158, 11, 0.85)',
+            'revision' => 'rgba(249, 115, 22, 0.85)',
+            'processing' => 'rgba(14, 165, 233, 0.85)',
+            'approved' => 'rgba(16, 185, 129, 0.85)',
+            'rejected' => 'rgba(239, 68, 68, 0.85)',
+            'completed' => 'rgba(34, 197, 94, 0.85)',
+            'collected' => 'rgba(139, 92, 246, 0.85)',
+        ];
+
+        foreach ($daftarStatus as $kode => $nama) {
+            $jumlah = (int) (
+                $jumlahStatus[$kode] ?? 0
+            );
+
+            if ($jumlah === 0) {
+                continue;
+            }
+
+            $label[] = $nama;
+            $data[] = $jumlah;
+            $warna[] = $daftarWarna[$kode];
+        }
+
+        if ($data === []) {
+            $label = [
+                'Belum Ada Data',
+            ];
+
+            $data = [
+                1,
+            ];
+
+            $warna = [
+                'rgba(100, 116, 139, 0.35)',
+            ];
+        }
 
         return [
             'datasets' => [
                 [
                     'label' => 'Jumlah Permohonan',
-                    'data' => collect(array_keys($statuses))
-                        ->map(
-                            fn (string $status): int =>
-                                (int) ($counts[$status] ?? 0),
-                        )
-                        ->all(),
-                    'backgroundColor' => [
-                        '#2563eb',
-                        '#f59e0b',
-                        '#f97316',
-                        '#7c3aed',
-                        '#0891b2',
-                        '#dc2626',
-                        '#16a34a',
-                    ],
+                    'data' => $data,
+                    'backgroundColor' => $warna,
                     'borderWidth' => 0,
-                    'hoverOffset' => 10,
+                    'hoverOffset' => 8,
                 ],
             ],
-            'labels' => array_values($statuses),
+            'labels' => $label,
         ];
     }
 
@@ -96,15 +119,12 @@ class ApplicationStatusChart extends ChartWidget
                     'display' => true,
                     'position' => 'bottom',
                     'labels' => [
+                        'boxWidth' => 12,
+                        'boxHeight' => 12,
+                        'padding' => 15,
                         'usePointStyle' => true,
                         'pointStyle' => 'circle',
-                        'padding' => 18,
                     ],
-                ],
-                'tooltip' => [
-                    'backgroundColor' => '#0f172a',
-                    'padding' => 12,
-                    'cornerRadius' => 10,
                 ],
             ],
         ];
