@@ -1,0 +1,10 @@
+UPDATE UI PENGUNJUNG KECAMATAN PANAKKUKANG
+
+1. Salin seluruh isi folder update ini ke root project Laravel.
+2. Izinkan replace file dengan nama yang sama.
+3. Jalankan npm install jika node_modules belum tersedia.
+4. Jalankan npm run dev.
+5. Jalankan php artisan optimize:clear.
+6. Buka http://127.0.0.1:8000/.
+
+Update mencakup landing page, navbar, footer, profil, layanan, berita, galeri, kontak, route publik, controller pengunjung, animasi scroll, counter, hero slider, carousel horizontal, dan ilustrasi SVG lokal.

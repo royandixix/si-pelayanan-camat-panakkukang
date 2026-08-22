@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620">
+  <defs><linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#022c22"/><stop offset="1" stop-color="#047857"/></linearGradient></defs>
+  <rect width="900" height="620" fill="url(#b)"/>
+  <path d="M0 470 260 230l160 130 235-248L900 320v300H0z" fill="#10b981" opacity=".16"/>
+  <rect x="95" y="110" width="710" height="405" rx="28" fill="#fff" opacity=".96"/>
+  <rect x="130" y="145" width="640" height="72" rx="16" fill="#ecfdf5"/>
+  <circle cx="170" cy="181" r="18" fill="#f59e0b"/>
+  <rect x="210" y="168" width="235" height="13" rx="6" fill="#065f46"/>
+  <rect x="210" y="191" width="145" height="8" rx="4" fill="#94a3b8"/>
+  <g transform="translate(130 255)"><rect width="190" height="190" rx="18" fill="#064e3b"/><text x="95" y="77" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#d1fae5">NOMOR</text><text x="95" y="137" text-anchor="middle" font-family="Arial, sans-serif" font-size="62" font-weight="800" fill="#fbbf24">A-018</text></g>
+  <g fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"><rect x="355" y="255" width="415" height="54" rx="12"/><rect x="355" y="323" width="415" height="54" rx="12"/><rect x="355" y="391" width="415" height="54" rx="12"/></g>
+  <g fill="#10b981"><circle cx="390" cy="282" r="10"/><circle cx="390" cy="350" r="10"/></g><circle cx="390" cy="418" r="10" fill="#f59e0b"/>
+  <g fill="#334155"><rect x="418" y="273" width="215" height="10" rx="5"/><rect x="418" y="341" width="185" height="10" rx="5"/><rect x="418" y="409" width="245" height="10" rx="5"/></g>
+</svg>

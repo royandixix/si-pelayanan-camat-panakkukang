@@ -5,21 +5,25 @@ namespace App\Filament\Widgets;
 use App\Models\Section;
 use App\Models\ServiceApplication;
 use Filament\Widgets\ChartWidget;
-use Illuminate\Database\Eloquent\Builder;
 
 class ServiceVolumeChart extends ChartWidget
 {
-    protected ?string $heading = 'Volume Permohonan per Seksi';
+    protected ?string $heading =
+        'Volume Permohonan per Seksi';
+
+    protected string $color = 'primary';
 
     protected static ?int $sort = 2;
 
-    protected int|string|array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 1;
 
-    protected ?string $maxHeight = '360px';
+    protected ?string $pollingInterval = '60s';
 
-    protected ?string $pollingInterval = null;
+    protected ?string $maxHeight = '330px';
 
     protected static bool $isLazy = false;
+
+    protected bool $isCollapsible = true;
 
     public function getDescription(): ?string
     {
@@ -28,47 +32,47 @@ class ServiceVolumeChart extends ChartWidget
 
     protected function getData(): array
     {
-        $daftarSeksi = Section::query()
+        $sections = Section::query()
             ->where('is_active', true)
             ->orderBy('name')
-            ->get([
-                'id',
-                'code',
-                'name',
-            ]);
+            ->get();
 
-        $jumlahPermohonan = $daftarSeksi
-            ->map(
-                fn (Section $seksi): int =>
-                    ServiceApplication::query()
-                        ->whereHas(
-                            'service',
-                            fn (Builder $query): Builder =>
-                                $query->where(
-                                    'section_id',
-                                    $seksi->id,
-                                ),
-                        )
-                        ->count(),
+        $applicationCounts = ServiceApplication::query()
+            ->join(
+                'services',
+                'services.id',
+                '=',
+                'service_applications.service_id',
             )
-            ->all();
+            ->selectRaw(
+                'services.section_id AS section_id, COUNT(*) AS total',
+            )
+            ->groupBy('services.section_id')
+            ->pluck('total', 'section_id');
 
         return [
             'datasets' => [
                 [
                     'label' => 'Jumlah Permohonan',
-                    'data' => $jumlahPermohonan,
-                    'borderWidth' => 1,
+                    'data' => $sections
+                        ->map(
+                            fn (Section $section): int =>
+                                (int) (
+                                    $applicationCounts[$section->id]
+                                    ?? 0
+                                ),
+                        )
+                        ->all(),
                     'borderRadius' => 6,
-                    'maxBarThickness' => 54,
+                    'borderSkipped' => false,
                 ],
             ],
-            'labels' => $daftarSeksi
+            'labels' => $sections
                 ->map(
-                    fn (Section $seksi): string =>
-                        strtoupper(
-                            (string) $seksi->code,
-                        ),
+                    fn (Section $section): string =>
+                        filled($section->code)
+                            ? $section->code
+                            : $section->name,
                 )
                 ->all(),
         ];
@@ -83,23 +87,20 @@ class ServiceVolumeChart extends ChartWidget
                 'legend' => [
                     'display' => false,
                 ],
+                'tooltip' => [
+                    'displayColors' => false,
+                ],
             ],
             'scales' => [
                 'x' => [
                     'grid' => [
                         'display' => false,
                     ],
-                    'ticks' => [
-                        'autoSkip' => false,
-                        'maxRotation' => 0,
-                        'minRotation' => 0,
-                    ],
                 ],
                 'y' => [
                     'beginAtZero' => true,
                     'ticks' => [
                         'precision' => 0,
-                        'stepSize' => 1,
                     ],
                 ],
             ],

@@ -11,7 +11,7 @@ use App\Filament\Widgets\AdminSeksiStatsOverview;
 use App\Filament\Widgets\AdminStatsOverview;
 use App\Filament\Widgets\ApplicationStatusChart;
 use App\Filament\Widgets\ServiceVolumeChart;
-use App\Http\Middleware\AuthenticateFilament;
+use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -24,6 +24,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Filament\Pages\Auth\LoginAdmin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -33,6 +34,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->login(LoginAdmin::class)
             ->brandName('Pelayanan Camat Panakkukang')
             ->colors([
                 'primary' => Color::Blue,
@@ -67,7 +69,7 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
-                AuthenticateFilament::class,
+                Authenticate::class,
             ]);
     }
 }

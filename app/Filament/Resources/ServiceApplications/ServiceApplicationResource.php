@@ -19,7 +19,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
-
 class ServiceApplicationResource extends Resource
 {
     protected static ?string $model = ServiceApplication::class;
