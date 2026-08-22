@@ -19,9 +19,11 @@ use App\Http\Controllers\Pengunjung\KontakController;
 use App\Http\Controllers\Pengunjung\LayananController as LayananPengunjungController;
 use App\Http\Controllers\Pengunjung\ProfilKecamatanController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Pengunjung\PegawaiController;
 
 Route::get('/', [BerandaController::class, 'index'])->name('beranda');
 Route::get('/profil', [ProfilKecamatanController::class, 'index'])->name('profil-kecamatan');
+Route::get('/profil/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
 Route::get('/layanan', [LayananPengunjungController::class, 'index'])->name('layanan');
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita');
 Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri');

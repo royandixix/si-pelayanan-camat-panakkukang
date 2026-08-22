@@ -620,7 +620,7 @@
                     <a href="{{ url('/masyarakat') }}" class="public-button">
                         Buka Dashboard
                     </a>
-                @endguest
+[]                @endguest
             </div>
         </div>
     </div>
