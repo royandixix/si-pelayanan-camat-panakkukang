@@ -32,6 +32,7 @@ class PimpinanPanelProvider extends PanelProvider
             ->id('pimpinan')
             ->path('pimpinan')
             ->login()
+            ->authGuard('pimpinan')
             ->brandName('Pelayanan Camat Panakkukang')
             ->defaultThemeMode(ThemeMode::System)
             ->colors([

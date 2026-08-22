@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Auth\LoginAdmin;
 use App\Filament\Pages\Dashboard;
 use App\Filament\Pages\LaporanRekapitulasi;
 use App\Filament\Widgets\AdminSeksiApplicationStatusChart;
@@ -24,7 +25,6 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use App\Filament\Pages\Auth\LoginAdmin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -35,6 +35,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login(LoginAdmin::class)
+            ->authGuard('admin')
             ->brandName('Pelayanan Camat Panakkukang')
             ->colors([
                 'primary' => Color::Blue,
