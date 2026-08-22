@@ -1393,3 +1393,1102 @@
 .public-back-top:hover {
     background: #16283d;
 }
+
+.public-process-item {
+    position: relative;
+    min-height: 245px;
+    padding: 32px 28px;
+    border: 1px solid transparent;
+    border-radius: 18px;
+    cursor: default;
+    transition:
+        transform 0.35s ease,
+        background 0.35s ease,
+        border-color 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+.public-process-item::before {
+    position: absolute;
+    top: 0;
+    right: 28px;
+    left: 28px;
+    height: 2px;
+    border-radius: 999px;
+    background: #d4a84f;
+    content: "";
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition:
+        opacity 0.35s ease,
+        transform 0.35s ease;
+}
+
+.public-process-item:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: 0 18px 45px rgba(5, 18, 31, 0.2);
+    transform: translateY(-8px);
+}
+
+.public-process-item:hover::before {
+    opacity: 1;
+    transform: scaleX(1);
+}
+
+.public-process-number {
+    transition:
+        background 0.35s ease,
+        border-color 0.35s ease,
+        color 0.35s ease,
+        transform 0.35s ease;
+}
+
+.public-process-item:hover .public-process-number {
+    border-color: #d4a84f;
+    background: #d4a84f;
+    color: #1f3550;
+    transform: scale(1.07);
+}
+
+.public-process-item h3 {
+    transition:
+        color 0.35s ease,
+        transform 0.35s ease;
+}
+
+.public-process-item:hover h3 {
+    color: #ffffff;
+    transform: translateX(3px);
+}
+
+.public-process-item p {
+    transition: color 0.35s ease;
+}
+
+.public-process-item:hover p {
+    color: #d7e0e8;
+}
+
+@media (max-width: 700px) {
+    .public-process-item {
+        min-height: auto;
+        padding: 28px 24px;
+        border-color: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.035);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .public-process-item,
+    .public-process-item::before,
+    .public-process-number,
+    .public-process-item h3,
+    .public-process-item p {
+        transition: none;
+    }
+
+    .public-process-item:hover {
+        transform: none;
+    }
+}
+
+.public-process-item {
+    position: relative;
+    min-height: 245px;
+    padding: 32px 28px;
+    border: 1px solid transparent;
+    border-radius: 18px;
+    cursor: default;
+    transition:
+        transform 0.35s ease,
+        background 0.35s ease,
+        border-color 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+.public-process-item::before {
+    position: absolute;
+    top: 0;
+    right: 28px;
+    left: 28px;
+    height: 2px;
+    border-radius: 999px;
+    background: #d4a84f;
+    content: "";
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition:
+        opacity 0.35s ease,
+        transform 0.35s ease;
+}
+
+.public-process-item:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: 0 18px 45px rgba(5, 18, 31, 0.2);
+    transform: translateY(-8px);
+}
+
+.public-process-item:hover::before {
+    opacity: 1;
+    transform: scaleX(1);
+}
+
+.public-process-number {
+    transition:
+        background 0.35s ease,
+        border-color 0.35s ease,
+        color 0.35s ease,
+        transform 0.35s ease;
+}
+
+.public-process-item:hover .public-process-number {
+    border-color: #d4a84f;
+    background: #d4a84f;
+    color: #1f3550;
+    transform: scale(1.07);
+}
+
+.public-process-item h3 {
+    transition:
+        color 0.35s ease,
+        transform 0.35s ease;
+}
+
+.public-process-item:hover h3 {
+    color: #ffffff;
+    transform: translateX(3px);
+}
+
+.public-process-item p {
+    transition: color 0.35s ease;
+}
+
+.public-process-item:hover p {
+    color: #d7e0e8;
+}
+
+@media (max-width: 700px) {
+    .public-process-item {
+        min-height: auto;
+        padding: 28px 24px;
+        border-color: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.035);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .public-process-item,
+    .public-process-item::before,
+    .public-process-number,
+    .public-process-item h3,
+    .public-process-item p {
+        transition: none;
+    }
+
+    .public-process-item:hover {
+        transform: none;
+    }
+}
+
+.public-nav {
+    transition:
+        background-color 0.35s ease,
+        border-color 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+.public-nav-inner {
+    transition:
+        min-height 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+        padding 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.public-nav.is-scrolled .public-nav-inner {
+    min-height: 72px;
+}
+
+.public-brand {
+    transition:
+        transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.3s ease;
+}
+
+.public-brand:hover {
+    transform: translateY(-2px);
+}
+
+.public-brand-mark {
+    transition:
+        transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+        background-color 0.3s ease;
+}
+
+.public-brand:hover .public-brand-mark {
+    transform: rotate(-7deg) scale(1.05);
+    background: #16283d;
+}
+
+.public-nav-link {
+    transition:
+        color 0.25s ease,
+        transform 0.25s ease;
+}
+
+.public-nav-link:hover {
+    transform: translateY(-2px);
+}
+
+.public-nav-link::after {
+    transition:
+        transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.3s ease;
+}
+
+.public-nav-desktop-actions .public-button {
+    transition:
+        transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+        background-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.public-nav-desktop-actions .public-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(31, 53, 80, 0.16);
+}
+
+.public-menu-button {
+    position: relative;
+    overflow: hidden;
+    transition:
+        transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        color 0.3s ease;
+}
+
+.public-menu-button svg {
+    transition:
+        transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.3s ease;
+}
+
+.public-menu-button:hover {
+    border-color: #cbd6df;
+    background: #f4f7fa;
+}
+
+.public-menu-button.is-open {
+    border-color: #1f3550;
+    background: #1f3550;
+    color: #ffffff;
+    transform: rotate(90deg);
+}
+
+.public-menu-button.is-open svg {
+    transform: scale(0.9);
+}
+
+@media (max-width: 1024px) {
+    .public-mobile-menu {
+        display: block;
+        max-height: 0;
+        overflow: hidden;
+        border-top: 1px solid transparent;
+        background: rgba(255, 255, 255, 0.98);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-12px);
+        transition:
+            max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+            opacity 0.35s ease,
+            visibility 0.35s ease,
+            transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+            border-color 0.35s ease;
+    }
+
+    .public-mobile-menu.is-open {
+        display: block;
+        max-height: 620px;
+        border-top-color: #e3e8ee;
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .public-mobile-menu-inner {
+        display: grid;
+        gap: 4px;
+        padding: 14px 0 24px;
+    }
+
+    .public-mobile-menu-inner > a {
+        display: flex;
+        min-height: 48px;
+        align-items: center;
+        padding: 0 14px;
+        border-radius: 12px;
+        color: #526273;
+        font-size: 14px;
+        font-weight: 500;
+        opacity: 0;
+        transform: translateY(-8px);
+        transition:
+            background-color 0.25s ease,
+            color 0.25s ease,
+            opacity 0.35s ease,
+            transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .public-mobile-menu.is-open .public-mobile-menu-inner > a {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .public-mobile-menu.is-open .public-mobile-menu-inner > a:nth-child(1) {
+        transition-delay: 0.05s;
+    }
+
+    .public-mobile-menu.is-open .public-mobile-menu-inner > a:nth-child(2) {
+        transition-delay: 0.09s;
+    }
+
+    .public-mobile-menu.is-open .public-mobile-menu-inner > a:nth-child(3) {
+        transition-delay: 0.13s;
+    }
+
+    .public-mobile-menu.is-open .public-mobile-menu-inner > a:nth-child(4) {
+        transition-delay: 0.17s;
+    }
+
+    .public-mobile-menu.is-open .public-mobile-menu-inner > a:nth-child(5) {
+        transition-delay: 0.21s;
+    }
+
+    .public-mobile-menu.is-open .public-mobile-menu-inner > a:nth-child(6) {
+        transition-delay: 0.25s;
+    }
+
+    .public-mobile-menu.is-open .public-mobile-menu-inner > a:nth-child(7) {
+        transition-delay: 0.29s;
+    }
+
+    .public-mobile-menu-inner > a:not(.public-button):hover {
+        background: #f4f7fa;
+        color: #1f3550;
+        transform: translateX(4px);
+    }
+
+    .public-mobile-menu-inner .public-button {
+        justify-content: center;
+        margin-top: 8px;
+        color: #ffffff;
+    }
+}
+
+@media (max-width: 700px) {
+    .public-nav.is-scrolled .public-nav-inner {
+        min-height: 66px;
+    }
+
+    .public-mobile-menu-inner {
+        padding-top: 12px;
+        padding-bottom: 20px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .public-nav,
+    .public-nav-inner,
+    .public-brand,
+    .public-brand-mark,
+    .public-nav-link,
+    .public-nav-link::after,
+    .public-menu-button,
+    .public-menu-button svg,
+    .public-mobile-menu,
+    .public-mobile-menu-inner > a {
+        transition: none;
+    }
+}
+
+.public-faq-list {
+    border-top: 1px solid #dfe5eb;
+}
+
+.public-faq-item {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid #dfe5eb;
+    transition:
+        background-color 0.35s ease,
+        border-color 0.35s ease,
+        padding 0.35s ease;
+}
+
+.public-faq-item::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 3px;
+    background: #d4a84f;
+    content: "";
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition:
+        opacity 0.35s ease,
+        transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.public-faq-item:hover {
+    background: #f7f9fb;
+}
+
+.public-faq-item.is-open {
+    margin: 8px 0;
+    border-bottom-color: transparent;
+    border-radius: 14px;
+    background: #f4f7fa;
+}
+
+.public-faq-item.is-open::before {
+    opacity: 1;
+    transform: scaleY(1);
+}
+
+.public-faq-question {
+    display: flex;
+    width: 100%;
+    min-height: 82px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 0 20px 0 0;
+    border: 0;
+    background: transparent;
+    color: #24364b;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.6;
+    text-align: left;
+    cursor: pointer;
+    transition:
+        padding 0.35s ease,
+        color 0.3s ease;
+}
+
+.public-faq-item.is-open .public-faq-question {
+    padding-left: 25px;
+    color: #1f3550;
+}
+
+.public-faq-icon {
+    position: relative;
+    display: flex;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #d9e0e7;
+    border-radius: 50%;
+    background: #ffffff;
+    transition:
+        background-color 0.35s ease,
+        border-color 0.35s ease,
+        transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.public-faq-icon span {
+    position: absolute;
+    width: 12px;
+    height: 1.5px;
+    border-radius: 10px;
+    background: #1f3550;
+    transition:
+        transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+        background-color 0.3s ease;
+}
+
+.public-faq-icon span:last-child {
+    transform: rotate(90deg);
+}
+
+.public-faq-item:hover .public-faq-icon {
+    border-color: #bcc9d4;
+    transform: scale(1.06);
+}
+
+.public-faq-item.is-open .public-faq-icon {
+    border-color: #1f3550;
+    background: #1f3550;
+    transform: rotate(180deg);
+}
+
+.public-faq-item.is-open .public-faq-icon span {
+    background: #ffffff;
+}
+
+.public-faq-item.is-open .public-faq-icon span:last-child {
+    transform: rotate(0deg);
+}
+
+.public-faq-content {
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition:
+        height 0.48s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.35s ease;
+}
+
+.public-faq-item.is-open .public-faq-content {
+    opacity: 1;
+}
+
+.public-faq-answer {
+    padding: 0 70px 28px 25px;
+}
+
+.public-faq-answer p {
+    margin: 0;
+    color: #687586;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.9;
+}
+
+.public-faq-answer p + p {
+    margin-top: 13px;
+}
+
+@media (max-width: 700px) {
+    .public-faq-question {
+        min-height: 76px;
+        gap: 18px;
+        padding-right: 8px;
+        font-size: 14px;
+    }
+
+    .public-faq-item.is-open .public-faq-question {
+        padding-left: 18px;
+        padding-right: 12px;
+    }
+
+    .public-faq-answer {
+        padding: 0 20px 24px 18px;
+    }
+
+    .public-faq-icon {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .public-faq-item,
+    .public-faq-item::before,
+    .public-faq-question,
+    .public-faq-icon,
+    .public-faq-icon span,
+    .public-faq-content {
+        transition: none;
+    }
+}
+
+.public-faq-list {
+    border-top: 1px solid #dfe5eb;
+}
+
+.public-faq-item {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid #dfe5eb;
+    transition:
+        background-color 0.35s ease,
+        border-color 0.35s ease,
+        padding 0.35s ease;
+}
+
+.public-faq-item::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 3px;
+    background: #d4a84f;
+    content: "";
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition:
+        opacity 0.35s ease,
+        transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.public-faq-item:hover {
+    background: #f7f9fb;
+}
+
+.public-faq-item.is-open {
+    margin: 8px 0;
+    border-bottom-color: transparent;
+    border-radius: 14px;
+    background: #f4f7fa;
+}
+
+.public-faq-item.is-open::before {
+    opacity: 1;
+    transform: scaleY(1);
+}
+
+.public-faq-question {
+    display: flex;
+    width: 100%;
+    min-height: 82px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 0 20px 0 0;
+    border: 0;
+    background: transparent;
+    color: #24364b;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.6;
+    text-align: left;
+    cursor: pointer;
+    transition:
+        padding 0.35s ease,
+        color 0.3s ease;
+}
+
+.public-faq-item.is-open .public-faq-question {
+    padding-left: 25px;
+    color: #1f3550;
+}
+
+.public-faq-icon {
+    position: relative;
+    display: flex;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #d9e0e7;
+    border-radius: 50%;
+    background: #ffffff;
+    transition:
+        background-color 0.35s ease,
+        border-color 0.35s ease,
+        transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.public-faq-icon span {
+    position: absolute;
+    width: 12px;
+    height: 1.5px;
+    border-radius: 10px;
+    background: #1f3550;
+    transition:
+        transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+        background-color 0.3s ease;
+}
+
+.public-faq-icon span:last-child {
+    transform: rotate(90deg);
+}
+
+.public-faq-item:hover .public-faq-icon {
+    border-color: #bcc9d4;
+    transform: scale(1.06);
+}
+
+.public-faq-item.is-open .public-faq-icon {
+    border-color: #1f3550;
+    background: #1f3550;
+    transform: rotate(180deg);
+}
+
+.public-faq-item.is-open .public-faq-icon span {
+    background: #ffffff;
+}
+
+.public-faq-item.is-open .public-faq-icon span:last-child {
+    transform: rotate(0deg);
+}
+
+.public-faq-content {
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition:
+        height 0.48s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.35s ease;
+}
+
+.public-faq-item.is-open .public-faq-content {
+    opacity: 1;
+}
+
+.public-faq-answer {
+    padding: 0 70px 28px 25px;
+}
+
+.public-faq-answer p {
+    margin: 0;
+    color: #687586;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.9;
+}
+
+.public-faq-answer p + p {
+    margin-top: 13px;
+}
+
+@media (max-width: 700px) {
+    .public-faq-question {
+        min-height: 76px;
+        gap: 18px;
+        padding-right: 8px;
+        font-size: 14px;
+    }
+
+    .public-faq-item.is-open .public-faq-question {
+        padding-left: 18px;
+        padding-right: 12px;
+    }
+
+    .public-faq-answer {
+        padding: 0 20px 24px 18px;
+    }
+
+    .public-faq-icon {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .public-faq-item,
+    .public-faq-item::before,
+    .public-faq-question,
+    .public-faq-icon,
+    .public-faq-icon span,
+    .public-faq-content {
+        transition: none;
+    }
+}
+
+.public-faq-list {
+    border-top: 1px solid #dfe5eb;
+}
+
+.public-faq-item {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid #dfe5eb;
+    transition:
+        background-color 0.35s ease,
+        border-color 0.35s ease,
+        padding 0.35s ease;
+}
+
+.public-faq-item::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 3px;
+    background: #d4a84f;
+    content: "";
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition:
+        opacity 0.35s ease,
+        transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.public-faq-item:hover {
+    background: #f7f9fb;
+}
+
+.public-faq-item.is-open {
+    margin: 8px 0;
+    border-bottom-color: transparent;
+    border-radius: 14px;
+    background: #f4f7fa;
+}
+
+.public-faq-item.is-open::before {
+    opacity: 1;
+    transform: scaleY(1);
+}
+
+.public-faq-question {
+    display: flex;
+    width: 100%;
+    min-height: 82px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 0 20px 0 0;
+    border: 0;
+    background: transparent;
+    color: #24364b;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.6;
+    text-align: left;
+    cursor: pointer;
+    transition:
+        padding 0.35s ease,
+        color 0.3s ease;
+}
+
+.public-faq-item.is-open .public-faq-question {
+    padding-left: 25px;
+    color: #1f3550;
+}
+
+.public-faq-icon {
+    position: relative;
+    display: flex;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #d9e0e7;
+    border-radius: 50%;
+    background: #ffffff;
+    transition:
+        background-color 0.35s ease,
+        border-color 0.35s ease,
+        transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.public-faq-icon span {
+    position: absolute;
+    width: 12px;
+    height: 1.5px;
+    border-radius: 10px;
+    background: #1f3550;
+    transition:
+        transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+        background-color 0.3s ease;
+}
+
+.public-faq-icon span:last-child {
+    transform: rotate(90deg);
+}
+
+.public-faq-item:hover .public-faq-icon {
+    border-color: #bcc9d4;
+    transform: scale(1.06);
+}
+
+.public-faq-item.is-open .public-faq-icon {
+    border-color: #1f3550;
+    background: #1f3550;
+    transform: rotate(180deg);
+}
+
+.public-faq-item.is-open .public-faq-icon span {
+    background: #ffffff;
+}
+
+.public-faq-item.is-open .public-faq-icon span:last-child {
+    transform: rotate(0deg);
+}
+
+.public-faq-content {
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition:
+        height 0.48s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.35s ease;
+}
+
+.public-faq-item.is-open .public-faq-content {
+    opacity: 1;
+}
+
+.public-faq-answer {
+    padding: 0 70px 28px 25px;
+}
+
+.public-faq-answer p {
+    margin: 0;
+    color: #687586;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.9;
+}
+
+.public-faq-answer p + p {
+    margin-top: 13px;
+}
+
+@media (max-width: 700px) {
+    .public-faq-question {
+        min-height: 76px;
+        gap: 18px;
+        padding-right: 8px;
+        font-size: 14px;
+    }
+
+    .public-faq-item.is-open .public-faq-question {
+        padding-left: 18px;
+        padding-right: 12px;
+    }
+
+    .public-faq-answer {
+        padding: 0 20px 24px 18px;
+    }
+
+    .public-faq-icon {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .public-faq-item,
+    .public-faq-item::before,
+    .public-faq-question,
+    .public-faq-icon,
+    .public-faq-icon span,
+    .public-faq-content {
+        transition: none;
+    }
+}
+
+.public-section {
+    padding: 82px 0;
+}
+
+.public-process {
+    padding: 78px 0;
+    background: #1f3550;
+}
+
+.public-process .public-title-sm {
+    max-width: 620px;
+    color: #ffffff;
+    font-size: clamp(30px, 3.2vw, 46px);
+    font-weight: 500;
+    line-height: 1.15;
+}
+
+.public-process .public-kicker {
+    margin-bottom: 14px;
+    color: #dfbd73;
+}
+
+.public-process-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-top: 42px;
+}
+
+.public-process-item {
+    min-height: 205px;
+    padding: 26px 24px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.035);
+}
+
+.public-process-item::before {
+    right: 24px;
+    left: 24px;
+}
+
+.public-process-number {
+    width: 48px;
+    height: 48px;
+    border-color: rgba(255, 255, 255, 0.25);
+    font-size: 12px;
+}
+
+.public-process-item h3 {
+    margin: 22px 0 9px;
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.public-process-item p {
+    max-width: 230px;
+    color: #b9c5d0;
+    font-size: 12px;
+    line-height: 1.75;
+}
+
+.public-process-item:hover {
+    border-color: rgba(223, 189, 115, 0.38);
+    background: rgba(255, 255, 255, 0.075);
+    box-shadow: 0 16px 35px rgba(8, 23, 38, 0.18);
+    transform: translateY(-5px);
+}
+
+.public-process-item:hover .public-process-number {
+    border-color: #dfbd73;
+    background: #dfbd73;
+    color: #1f3550;
+    transform: scale(1.05);
+}
+
+@media (max-width: 1024px) {
+    .public-section {
+        padding: 72px 0;
+    }
+
+    .public-process {
+        padding: 70px 0;
+    }
+
+    .public-process-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-top: 36px;
+    }
+}
+
+@media (max-width: 700px) {
+    .public-section {
+        padding: 58px 0;
+    }
+
+    .public-process {
+        padding: 58px 0;
+    }
+
+    .public-process-grid {
+        grid-template-columns: 1fr;
+        margin-top: 30px;
+    }
+
+    .public-process-item {
+        min-height: auto;
+        padding: 24px;
+    }
+
+    .public-process-item p {
+        max-width: none;
+    }
+}

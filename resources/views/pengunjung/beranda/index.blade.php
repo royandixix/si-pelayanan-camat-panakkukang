@@ -350,56 +350,249 @@
                 <h2 class="public-title-sm">
                     Pertanyaan yang sering ditanyakan.
                 </h2>
+
+                <p class="public-copy" style="margin-top:24px;max-width:430px;">
+                    Temukan jawaban mengenai akun masyarakat, pengajuan layanan,
+                    persyaratan dokumen, antrean, proses verifikasi, hingga hasil
+                    pelayanan Kecamatan Panakkukang.
+                </p>
+
+                <div style="margin-top:32px;">
+                    <a href="{{ url('/kontak') }}" class="public-button public-button-light">
+                        Pertanyaan Lainnya
+                    </a>
+                </div>
             </div>
 
             <div class="public-faq-list" data-public-reveal>
-                <details open>
-                    <summary>
-                        Apakah masyarakat harus memiliki akun?
-                        <span>+</span>
-                    </summary>
+                <div class="public-faq-item is-open" data-faq-item>
+                    <button
+                        type="button"
+                        class="public-faq-question"
+                        data-faq-button
+                        aria-expanded="true"
+                    >
+                        <span>Apakah masyarakat harus memiliki akun?</span>
 
-                    <div class="public-faq-answer">
-                        Akun diperlukan ketika masyarakat ingin mengajukan
-                        pelayanan dan memantau proses permohonan.
+                        <span class="public-faq-icon">
+                            <span></span>
+                            <span></span>
+                        </span>
+                    </button>
+
+                    <div class="public-faq-content" data-faq-content>
+                        <div class="public-faq-answer">
+                            <p>
+                                Ya. Akun masyarakat diperlukan untuk menggunakan
+                                fitur pengajuan pelayanan secara online.
+                            </p>
+
+                            <p>
+                                Setelah memiliki akun, masyarakat dapat memilih
+                                layanan, mengisi formulir permohonan, mengunggah
+                                dokumen persyaratan, melihat riwayat permohonan,
+                                menerima notifikasi, dan memantau perkembangan
+                                pelayanan melalui dashboard.
+                            </p>
+                        </div>
                     </div>
-                </details>
+                </div>
 
-                <details>
-                    <summary>
-                        Apakah informasi layanan dapat dilihat tanpa login?
-                        <span>+</span>
-                    </summary>
+                <div class="public-faq-item" data-faq-item>
+                    <button
+                        type="button"
+                        class="public-faq-question"
+                        data-faq-button
+                        aria-expanded="false"
+                    >
+                        <span>Apakah informasi layanan dapat dilihat tanpa login?</span>
 
-                    <div class="public-faq-answer">
-                        Ya. Informasi mengenai jenis pelayanan dapat diakses
-                        langsung melalui halaman publik.
+                        <span class="public-faq-icon">
+                            <span></span>
+                            <span></span>
+                        </span>
+                    </button>
+
+                    <div class="public-faq-content" data-faq-content>
+                        <div class="public-faq-answer">
+                            <p>
+                                Ya. Pengunjung dapat melihat daftar pelayanan
+                                Kecamatan Panakkukang tanpa harus masuk ke dalam
+                                sistem terlebih dahulu.
+                            </p>
+
+                            <p>
+                                Informasi tersebut dapat digunakan untuk mengetahui
+                                jenis pelayanan, seksi yang menangani, gambaran
+                                proses pelayanan, dan informasi persyaratan sebelum
+                                masyarakat membuat permohonan.
+                            </p>
+                        </div>
                     </div>
-                </details>
+                </div>
 
-                <details>
-                    <summary>
-                        Bagaimana memantau status permohonan?
-                        <span>+</span>
-                    </summary>
+                <div class="public-faq-item" data-faq-item>
+                    <button
+                        type="button"
+                        class="public-faq-question"
+                        data-faq-button
+                        aria-expanded="false"
+                    >
+                        <span>Bagaimana cara mengajukan pelayanan?</span>
 
-                    <div class="public-faq-answer">
-                        Setelah login, status permohonan dapat dipantau melalui
-                        dashboard masyarakat.
+                        <span class="public-faq-icon">
+                            <span></span>
+                            <span></span>
+                        </span>
+                    </button>
+
+                    <div class="public-faq-content" data-faq-content>
+                        <div class="public-faq-answer">
+                            <p>
+                                Masyarakat terlebih dahulu masuk menggunakan akun
+                                yang telah terdaftar, kemudian memilih jenis layanan
+                                yang dibutuhkan melalui halaman layanan.
+                            </p>
+
+                            <p>
+                                Selanjutnya masyarakat mengisi data permohonan,
+                                melengkapi dokumen persyaratan, lalu mengirim
+                                permohonan untuk diperiksa oleh petugas sesuai seksi
+                                pelayanan terkait.
+                            </p>
+                        </div>
                     </div>
-                </details>
+                </div>
 
-                <details>
-                    <summary>
-                        Bagaimana jika dokumen perlu diperbaiki?
-                        <span>+</span>
-                    </summary>
+                <div class="public-faq-item" data-faq-item>
+                    <button
+                        type="button"
+                        class="public-faq-question"
+                        data-faq-button
+                        aria-expanded="false"
+                    >
+                        <span>Bagaimana memantau status permohonan?</span>
 
-                    <div class="public-faq-answer">
-                        Sistem menyediakan informasi revisi sehingga masyarakat
-                        dapat memperbaiki dokumen dan mengirim ulang permohonan.
+                        <span class="public-faq-icon">
+                            <span></span>
+                            <span></span>
+                        </span>
+                    </button>
+
+                    <div class="public-faq-content" data-faq-content>
+                        <div class="public-faq-answer">
+                            <p>
+                                Perkembangan permohonan dapat dilihat melalui
+                                dashboard masyarakat pada menu Permohonan.
+                            </p>
+
+                            <p>
+                                Sistem menampilkan status proses sehingga masyarakat
+                                dapat mengetahui apakah permohonan masih menunggu
+                                verifikasi, sedang diproses, membutuhkan revisi,
+                                ditolak, atau telah selesai.
+                            </p>
+                        </div>
                     </div>
-                </details>
+                </div>
+
+                <div class="public-faq-item" data-faq-item>
+                    <button
+                        type="button"
+                        class="public-faq-question"
+                        data-faq-button
+                        aria-expanded="false"
+                    >
+                        <span>Bagaimana jika dokumen perlu diperbaiki?</span>
+
+                        <span class="public-faq-icon">
+                            <span></span>
+                            <span></span>
+                        </span>
+                    </button>
+
+                    <div class="public-faq-content" data-faq-content>
+                        <div class="public-faq-answer">
+                            <p>
+                                Jika petugas menemukan dokumen yang belum sesuai,
+                                masyarakat akan mendapatkan informasi mengenai
+                                dokumen yang harus diperbaiki.
+                            </p>
+
+                            <p>
+                                Dokumen dapat diperbarui melalui halaman detail
+                                permohonan. Setelah seluruh perbaikan selesai,
+                                masyarakat dapat mengirim ulang permohonan agar
+                                kembali diperiksa oleh petugas.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="public-faq-item" data-faq-item>
+                    <button
+                        type="button"
+                        class="public-faq-question"
+                        data-faq-button
+                        aria-expanded="false"
+                    >
+                        <span>Apakah tersedia sistem antrean pelayanan?</span>
+
+                        <span class="public-faq-icon">
+                            <span></span>
+                            <span></span>
+                        </span>
+                    </button>
+
+                    <div class="public-faq-content" data-faq-content>
+                        <div class="public-faq-answer">
+                            <p>
+                                Untuk pelayanan yang menggunakan antrean, informasi
+                                nomor dan status antrean dapat dilihat melalui menu
+                                Antrean pada dashboard masyarakat.
+                            </p>
+
+                            <p>
+                                Informasi tersebut membantu masyarakat mengetahui
+                                posisi antrean dan perkembangan proses pelayanan
+                                tanpa harus terus menanyakan kepada petugas.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="public-faq-item" data-faq-item>
+                    <button
+                        type="button"
+                        class="public-faq-question"
+                        data-faq-button
+                        aria-expanded="false"
+                    >
+                        <span>Bagaimana mengetahui permohonan sudah selesai?</span>
+
+                        <span class="public-faq-icon">
+                            <span></span>
+                            <span></span>
+                        </span>
+                    </button>
+
+                    <div class="public-faq-content" data-faq-content>
+                        <div class="public-faq-answer">
+                            <p>
+                                Ketika proses pelayanan telah selesai, status
+                                permohonan akan diperbarui pada dashboard dan
+                                masyarakat dapat memperoleh pemberitahuan melalui
+                                sistem.
+                            </p>
+
+                            <p>
+                                Jika layanan menghasilkan dokumen digital, hasil
+                                pelayanan dapat diakses atau diunduh melalui detail
+                                permohonan sesuai dengan ketentuan layanan tersebut.
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
