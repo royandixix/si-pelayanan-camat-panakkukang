@@ -43,7 +43,6 @@ Route::middleware('auth')
         Route::get('/', [DasborController::class, 'index'])->name('dashboard');
         Route::get('/layanan', [LayananMasyarakatController::class, 'index'])->name('layanan.index');
         Route::get('/layanan/{layanan:slug}', [LayananMasyarakatController::class, 'show'])->name('layanan.show');
-        Route::post('/layanan/{layanan:slug}/antrean', [AntreanController::class, 'store'])->name('layanan.antrean.store');
         Route::get('/permohonan', [PermohonanController::class, 'index'])->name('permohonan.index');
         Route::get('/permohonan/buat/{layanan:slug}', [PermohonanController::class, 'create'])->name('permohonan.create');
         Route::post('/permohonan/buat/{layanan:slug}', [PermohonanController::class, 'store'])->name('permohonan.store');

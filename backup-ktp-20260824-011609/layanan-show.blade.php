@@ -46,11 +46,11 @@
             <section class="rounded-xl border border-zinc-200 bg-white shadow-sm">
                 <header class="border-b border-zinc-200 px-6 py-5">
                     <h2 class="text-base font-semibold text-zinc-900">
-                        Persyaratan Layanan
+                        Persyaratan dokumen
                     </h2>
 
                     <p class="mt-1 text-xs leading-5 text-zinc-500">
-                        Siapkan seluruh persyaratan sebelum melanjutkan pelayanan.
+                        Siapkan seluruh dokumen sebelum mengirim permohonan.
                     </p>
                 </header>
 
@@ -116,85 +116,6 @@
                     @endforelse
                 </div>
             </section>
-
-            @php
-                $standar = is_array($layanan->service_standard)
-                    ? $layanan->service_standard
-                    : [];
-
-                $prosedur = $standar['prosedur'] ?? [];
-                $jangkaWaktu = $standar['jangka_waktu'] ?? null;
-                $biaya = $standar['biaya'] ?? null;
-                $catatan = $standar['catatan'] ?? null;
-            @endphp
-
-            @if(count($prosedur) > 0)
-                <section class="rounded-xl border border-zinc-200 bg-white shadow-sm">
-                    <header class="border-b border-zinc-200 px-6 py-5">
-                        <h2 class="text-base font-semibold text-zinc-900">
-                            Prosedur Pelayanan
-                        </h2>
-
-                        <p class="mt-1 text-xs leading-5 text-zinc-500">
-                            Ikuti tahapan pelayanan berikut.
-                        </p>
-                    </header>
-
-                    <div class="space-y-4 p-6">
-                        @foreach($prosedur as $index => $langkah)
-                            <div class="flex gap-4">
-                                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-xs font-semibold text-white">
-                                    {{ $index + 1 }}
-                                </span>
-
-                                <p class="pt-1 text-sm leading-6 text-zinc-600">
-                                    {{ $langkah }}
-                                </p>
-                            </div>
-                        @endforeach
-                    </div>
-                </section>
-            @endif
-
-            @if($jangkaWaktu || $biaya || $catatan)
-                <section class="grid gap-4 sm:grid-cols-2">
-                    @if($jangkaWaktu)
-                        <div class="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm">
-                            <p class="text-xs font-medium uppercase tracking-wider text-zinc-400">
-                                Jangka Waktu
-                            </p>
-
-                            <p class="mt-2 text-sm font-semibold leading-6 text-zinc-900">
-                                {{ $jangkaWaktu }}
-                            </p>
-                        </div>
-                    @endif
-
-                    @if($biaya)
-                        <div class="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm">
-                            <p class="text-xs font-medium uppercase tracking-wider text-zinc-400">
-                                Biaya
-                            </p>
-
-                            <p class="mt-2 text-sm font-semibold leading-6 text-zinc-900">
-                                {{ $biaya }}
-                            </p>
-                        </div>
-                    @endif
-
-                    @if($catatan)
-                        <div class="rounded-xl border border-amber-200 bg-amber-50 p-5 sm:col-span-2">
-                            <p class="text-xs font-medium uppercase tracking-wider text-amber-600">
-                                Catatan Penting
-                            </p>
-
-                            <p class="mt-2 text-sm font-semibold leading-6 text-amber-900">
-                                {{ $catatan }}
-                            </p>
-                        </div>
-                    @endif
-                </section>
-            @endif
         </div>
 
         <aside>
@@ -245,47 +166,18 @@
                     </div>
                 </dl>
 
-                @if ($layanan->queue_enabled)
-                    <form
-                        method="POST"
-                        action="{{ route('masyarakat.layanan.antrean.store', $layanan->slug) }}"
-                        class="mt-5"
-                    >
-                        @csrf
+                <a href="{{ route('masyarakat.permohonan.create', $layanan->slug) }}"
+                    class="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-zinc-700">
+                    Ajukan layanan
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14"></path>
+                        <path d="m13 6 6 6-6 6"></path>
+                    </svg>
+                </a>
 
-                        <button
-                            type="submit"
-                            class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-zinc-700"
-                        >
-                            Ambil Nomor Antrean
-
-                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M5 12h14"></path>
-                                <path d="m13 6 6 6-6 6"></path>
-                            </svg>
-                        </button>
-                    </form>
-
-                    <p class="mt-3 text-center text-[11px] leading-5 text-zinc-400">
-                        Maksimal 30 nomor antrean per hari. Jika penuh, sistem memilih hari kerja berikutnya.
-                    </p>
-                @else
-                    <a
-                        href="{{ route('masyarakat.permohonan.create', $layanan->slug) }}"
-                        class="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-zinc-700"
-                    >
-                        Ajukan Layanan
-
-                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14"></path>
-                            <path d="m13 6 6 6-6 6"></path>
-                        </svg>
-                    </a>
-
-                    <p class="mt-3 text-center text-[11px] leading-5 text-zinc-400">
-                        Pastikan seluruh data dan dokumen sudah disiapkan.
-                    </p>
-                @endif
+                <p class="mt-3 text-center text-[11px] leading-5 text-zinc-400">
+                    Pastikan seluruh data dan dokumen sudah disiapkan.
+                </p>
             </div>
         </aside>
     </div>

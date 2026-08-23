@@ -27,6 +27,7 @@ class ProfilKecamatanController extends Controller
         $jumlahPegawai = Employee::query()
             ->active()
             ->count();
+            
 
         return view('pengunjung.profil-kecamatan.index', compact(
             'jumlahLayanan',

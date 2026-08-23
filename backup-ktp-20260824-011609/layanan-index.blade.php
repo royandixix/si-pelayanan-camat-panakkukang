@@ -161,13 +161,15 @@
                         </div>
 
                         <div class="mt-auto flex flex-col gap-2 pt-6 sm:flex-row">
+                            <x-standar-layanan-modal :layanan="$item" />
+
                             <a
                                 href="{{ route('masyarakat.layanan.show', [
                                     'layanan' => $item->slug,
                                 ]) }}"
                                 class="inline-flex min-h-11 items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
                             >
-                                Lihat Syarat & Detail
+                                Detail
                             </a>
                         </div>
                     </div>

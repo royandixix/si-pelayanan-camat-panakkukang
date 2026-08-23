@@ -4,13 +4,144 @@ namespace App\Http\Controllers\Masyarakat;
 
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Models\Service;
 use App\Models\ServiceQueue;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class AntreanController extends Controller
 {
+
+    public function store(Service $layanan): RedirectResponse
+    {
+        $this->pastikanMasyarakat();
+
+        abort_unless(
+            $layanan->is_active
+            && $layanan->queue_enabled,
+            404,
+        );
+
+        $layanan->loadMissing('section');
+
+        $existing = ServiceQueue::query()
+            ->where('user_id', auth()->id())
+            ->where('service_id', $layanan->id)
+            ->whereDate('queue_date', '>=', today())
+            ->whereIn('status', [
+                'waiting',
+                'called',
+                'serving',
+            ])
+            ->orderBy('queue_date')
+            ->orderBy('sequence')
+            ->first();
+
+        if ($existing) {
+            return redirect()->route(
+                'masyarakat.antrean.show',
+                $existing,
+            );
+        }
+
+        $antrean = DB::transaction(
+            function () use ($layanan): ServiceQueue {
+                $quota = max(
+                    1,
+                    (int) (
+                        $layanan->section?->daily_queue_quota
+                        ?? 30
+                    ),
+                );
+
+                $tanggal = today();
+
+                for (
+                    $percobaan = 0;
+                    $percobaan < 120;
+                    $percobaan++
+                ) {
+                    while ($tanggal->isWeekend()) {
+                        $tanggal->addDay();
+                    }
+
+                    $jumlah = ServiceQueue::query()
+                        ->where(
+                            'section_id',
+                            $layanan->section_id,
+                        )
+                        ->whereDate(
+                            'queue_date',
+                            $tanggal,
+                        )
+                        ->lockForUpdate()
+                        ->count();
+
+                    $urutanTerakhir =
+                        (int) ServiceQueue::query()
+                            ->where(
+                                'section_id',
+                                $layanan->section_id,
+                            )
+                            ->whereDate(
+                                'queue_date',
+                                $tanggal,
+                            )
+                            ->lockForUpdate()
+                            ->max('sequence');
+
+                    if (
+                        $jumlah < $quota
+                        && $urutanTerakhir < $quota
+                    ) {
+                        $urutan =
+                            $urutanTerakhir + 1;
+
+                        return ServiceQueue::query()
+                            ->create([
+                                'application_id' => null,
+                                'user_id' => auth()->id(),
+                                'section_id' =>
+                                    $layanan->section_id,
+                                'service_id' =>
+                                    $layanan->id,
+                                'queue_date' =>
+                                    $tanggal
+                                        ->toDateString(),
+                                'prefix' => 'A',
+                                'sequence' => $urutan,
+                                'queue_number' =>
+                                    'A-'
+                                    . str_pad(
+                                        (string) $urutan,
+                                        3,
+                                        '0',
+                                        STR_PAD_LEFT,
+                                    ),
+                                'status' => 'waiting',
+                                'registered_at' => now(),
+                            ]);
+                    }
+
+                    $tanggal->addDay();
+                }
+
+                abort(
+                    422,
+                    'Jadwal antrean tidak tersedia.',
+                );
+            },
+        );
+
+        return redirect()->route(
+            'masyarakat.antrean.show',
+            $antrean,
+        );
+    }
+
     public function index(Request $request): View
     {
         $this->pastikanMasyarakat();
