@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\KMeansRuns\Pages;
 
 use App\Filament\Resources\KMeansRuns\KMeansRunResource;
-use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewKMeansRun extends ViewRecord
@@ -14,9 +13,6 @@ class ViewKMeansRun extends ViewRecord
 
     protected function getHeaderActions(): array
     {
-        return [
-            EditAction::make()
-                ->label('Ubah'),
-        ];
+        return [];
     }
 }

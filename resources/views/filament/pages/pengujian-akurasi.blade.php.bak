@@ -1,0 +1,137 @@
+<x-filament-panels::page>
+    <x-filament::section>
+        <x-slot name="heading">
+            Evaluasi Internal K-Means
+        </x-slot>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px;">
+            <div>
+                <strong>K</strong>
+                <div style="font-size:26px;font-weight:600;">
+                    {{ $evaluation['k'] ?? '-' }}
+                </div>
+            </div>
+
+            <div>
+                <strong>Iterasi</strong>
+                <div style="font-size:26px;font-weight:600;">
+                    {{ $evaluation['iterations'] ?? '-' }}
+                </div>
+            </div>
+
+            <div>
+                <strong>WCSS</strong>
+                <div style="font-size:26px;font-weight:600;">
+                    {{ $evaluation['wcss'] === null ? '-' : number_format($evaluation['wcss'], 8) }}
+                </div>
+            </div>
+
+            <div>
+                <strong>Silhouette Score</strong>
+                <div style="font-size:26px;font-weight:600;">
+                    {{ $evaluation['silhouette_score'] === null ? '-' : number_format($evaluation['silhouette_score'], 6) }}
+                </div>
+            </div>
+        </div>
+    </x-filament::section>
+
+    <x-filament::section>
+        <x-slot name="heading">
+            Evaluasi Terhadap Label Referensi
+        </x-slot>
+
+        @if (!$evaluation['is_complete'])
+            <div style="margin-bottom:20px;padding:14px;border:1px solid #d4a84f;border-radius:8px;">
+                Pengujian akurasi belum final. Sudah divalidasi
+                {{ $evaluation['labeled_results'] }}
+                dari
+                {{ $evaluation['total_results'] }}
+                data.
+            </div>
+        @endif
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px;">
+            <div>
+                <strong>Accuracy</strong>
+                <div style="font-size:26px;font-weight:600;">
+                    {{ $evaluation['accuracy'] === null ? '-' : number_format($evaluation['accuracy'] * 100, 2).'%' }}
+                </div>
+            </div>
+
+            <div>
+                <strong>Macro Precision</strong>
+                <div style="font-size:26px;font-weight:600;">
+                    {{ $evaluation['precision_macro'] === null ? '-' : number_format($evaluation['precision_macro'] * 100, 2).'%' }}
+                </div>
+            </div>
+
+            <div>
+                <strong>Macro Recall</strong>
+                <div style="font-size:26px;font-weight:600;">
+                    {{ $evaluation['recall_macro'] === null ? '-' : number_format($evaluation['recall_macro'] * 100, 2).'%' }}
+                </div>
+            </div>
+
+            <div>
+                <strong>Macro F1-Score</strong>
+                <div style="font-size:26px;font-weight:600;">
+                    {{ $evaluation['f1_macro'] === null ? '-' : number_format($evaluation['f1_macro'] * 100, 2).'%' }}
+                </div>
+            </div>
+        </div>
+    </x-filament::section>
+
+    <x-filament::section>
+        <x-slot name="heading">
+            Evaluasi Per Kategori
+        </x-slot>
+
+        <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;text-align:center;">
+                <thead>
+                    <tr>
+                        <th style="padding:10px;border:1px solid #4b5563;">Kategori</th>
+                        <th style="padding:10px;border:1px solid #4b5563;">TP</th>
+                        <th style="padding:10px;border:1px solid #4b5563;">FP</th>
+                        <th style="padding:10px;border:1px solid #4b5563;">FN</th>
+                        <th style="padding:10px;border:1px solid #4b5563;">TN</th>
+                        <th style="padding:10px;border:1px solid #4b5563;">Precision</th>
+                        <th style="padding:10px;border:1px solid #4b5563;">Recall</th>
+                        <th style="padding:10px;border:1px solid #4b5563;">F1-Score</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach ($evaluation['class_metrics'] as $label => $metric)
+                        <tr>
+                            <td style="padding:10px;border:1px solid #4b5563;">
+                                {{ $label }}
+                            </td>
+                            <td style="padding:10px;border:1px solid #4b5563;">
+                                {{ $metric['tp'] }}
+                            </td>
+                            <td style="padding:10px;border:1px solid #4b5563;">
+                                {{ $metric['fp'] }}
+                            </td>
+                            <td style="padding:10px;border:1px solid #4b5563;">
+                                {{ $metric['fn'] }}
+                            </td>
+                            <td style="padding:10px;border:1px solid #4b5563;">
+                                {{ $metric['tn'] }}
+                            </td>
+                            <td style="padding:10px;border:1px solid #4b5563;">
+                                {{ number_format($metric['precision'] * 100, 2) }}%
+                            </td>
+                            <td style="padding:10px;border:1px solid #4b5563;">
+                                {{ number_format($metric['recall'] * 100, 2) }}%
+                            </td>
+                            <td style="padding:10px;border:1px solid #4b5563;">
+                                {{ number_format($metric['f1'] * 100, 2) }}%
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </x-filament::section>
+</x-filament-panels::page>

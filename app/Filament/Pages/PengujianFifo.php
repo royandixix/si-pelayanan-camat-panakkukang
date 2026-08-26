@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Filament\Pages;
+
+use App\Services\QueueFifoEvaluationService;
+use BackedEnum;
+use Filament\Pages\Page;
+use UnitEnum;
+
+class PengujianFifo extends Page
+{
+    protected static string|BackedEnum|null $navigationIcon =
+        'heroicon-o-queue-list';
+
+    protected static string|UnitEnum|null $navigationGroup =
+        'Data Mining';
+
+    protected static ?string $navigationLabel =
+        'Pengujian FIFO';
+
+    protected static ?string $title =
+        'Pengujian FIFO';
+
+    protected static ?string $slug =
+        'pengujian-fifo';
+
+    protected static ?int $navigationSort = 7;
+
+    protected string $view =
+        'filament.pages.pengujian-fifo';
+
+    public array $evaluation = [];
+
+    public function mount(): void
+    {
+        $this->evaluation = app(
+            QueueFifoEvaluationService::class
+        )->evaluate();
+    }
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isSuperAdmin() ?? false;
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+}

@@ -6,10 +6,10 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 
 class ServicesTable
@@ -17,20 +17,21 @@ class ServicesTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->defaultSort('name')
+            ->groups([
+                Group::make('section.name')
+                    ->label('Seksi / Divisi')
+                    ->collapsible(),
+            ])
+            ->defaultGroup('section.name')
             ->columns([
-                TextColumn::make('nomor')
-                    ->label('No.')
-                    ->rowIndex(),
-
                 TextColumn::make('section.name')
-                    ->label('Seksi')
+                    ->label('Seksi Penanggung Jawab')
+                    ->badge()
                     ->searchable()
-                    ->sortable()
-                    ->wrap(),
+                    ->sortable(),
 
                 TextColumn::make('code')
-                    ->label('Kode Layanan')
+                    ->label('Kode')
                     ->badge()
                     ->searchable()
                     ->sortable(),
@@ -39,40 +40,48 @@ class ServicesTable
                     ->label('Nama Layanan')
                     ->searchable()
                     ->sortable()
-                    ->wrap(),
+                    ->weight('medium'),
 
-                TextColumn::make('slug')
-                    ->label('Slug')
-                    ->searchable()
-                    ->copyable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                IconColumn::make('queue_enabled')
-                    ->label('Antrean Digital')
-                    ->boolean()
-                    ->sortable(),
+                TextColumn::make('queue_enabled')
+                    ->label('Antrean')
+                    ->badge()
+                    ->formatStateUsing(
+                        fn ($state): string =>
+                            $state ? 'Antrean Digital' : 'Tanpa Antrean'
+                    )
+                    ->color(
+                        fn ($state): string =>
+                            $state ? 'success' : 'gray'
+                    ),
 
                 TextColumn::make('processing_days')
-                    ->label('Estimasi Penyelesaian')
+                    ->label('Estimasi')
                     ->numeric()
                     ->suffix(' hari')
-                    ->placeholder('Tidak ditentukan')
+                    ->placeholder('-')
                     ->sortable(),
 
-                IconColumn::make('is_active')
-                    ->label('Status Aktif')
-                    ->boolean()
-                    ->sortable(),
+                TextColumn::make('is_active')
+                    ->label('Status')
+                    ->badge()
+                    ->formatStateUsing(
+                        fn ($state): string =>
+                            $state ? 'Aktif' : 'Tidak Aktif'
+                    )
+                    ->color(
+                        fn ($state): string =>
+                            $state ? 'success' : 'danger'
+                    ),
 
                 TextColumn::make('created_at')
-                    ->label('Dibuat Pada')
-                    ->dateTime('d M Y H:i')
+                    ->label('Dibuat')
+                    ->dateTime('d-m-Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('updated_at')
-                    ->label('Diperbarui Pada')
-                    ->dateTime('d M Y H:i')
+                    ->label('Diperbarui')
+                    ->dateTime('d-m-Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -84,7 +93,7 @@ class ServicesTable
                     ->preload()
                     ->visible(
                         fn (): bool =>
-                            auth()->user()?->isSuperAdmin() ?? false,
+                            auth()->user()?->isSuperAdmin() ?? false
                     ),
 
                 TernaryFilter::make('queue_enabled')
@@ -107,7 +116,7 @@ class ServicesTable
                     ->label('Ubah')
                     ->visible(
                         fn (): bool =>
-                            auth()->user()?->isSuperAdmin() ?? false,
+                            auth()->user()?->isSuperAdmin() ?? false
                     ),
             ])
             ->toolbarActions([
@@ -122,12 +131,12 @@ class ServicesTable
                     ->label('Tindakan')
                     ->visible(
                         fn (): bool =>
-                            auth()->user()?->isSuperAdmin() ?? false,
+                            auth()->user()?->isSuperAdmin() ?? false
                     ),
             ])
             ->emptyStateHeading('Belum ada data layanan')
             ->emptyStateDescription(
-                'Belum ada layanan yang tersedia pada seksi ini.',
+                'Belum ada layanan yang tersedia pada seksi ini.'
             )
             ->emptyStateIcon('heroicon-o-rectangle-stack');
     }

@@ -26,6 +26,7 @@ class ServiceForm
                     )
                     ->searchable()
                     ->preload()
+                    ->helperText('Layanan yang dibuat akan otomatis menjadi layanan pada seksi yang dipilih.')
                     ->required(),
 
                 TextInput::make('code')

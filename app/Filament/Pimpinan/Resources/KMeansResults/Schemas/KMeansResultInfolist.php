@@ -30,6 +30,8 @@ class KMeansResultInfolist
                             ->date('d M Y')
                             ->placeholder('-'),
 
+                        
+
                         TextEntry::make('run.status')
                             ->label('Status Analisis')
                             ->badge()

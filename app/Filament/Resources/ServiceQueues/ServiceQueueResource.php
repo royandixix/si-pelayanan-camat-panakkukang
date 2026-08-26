@@ -65,7 +65,12 @@ class ServiceQueueResource extends Resource
                 'user',
                 'section',
                 'service',
-            ]);
+            ])
+            ->orderByDesc('queue_date')
+            ->orderBy('section_id')
+            ->orderBy('service_id')
+            ->orderBy('sequence')
+            ->orderBy('registered_at');
 
         $user = auth()->user();
 

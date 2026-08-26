@@ -2,134 +2,105 @@
 
 namespace App\Filament\Resources\KMeansRuns\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use stdClass;
 
 class KMeansRunsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
-            ->defaultSort('created_at', 'desc')
+            ->defaultSort('id', 'desc')
             ->columns([
-                TextColumn::make('nomor')
-                    ->label('No.')
-                    ->state(
-                        static function (
-                            HasTable $livewire,
-                            stdClass $rowLoop,
-                        ): string {
-                            return (string) (
-                                $rowLoop->iteration
-                                + (
-                                    $livewire->getTableRecordsPerPage()
-                                    * ($livewire->getTablePage() - 1)
-                                )
-                            );
-                        },
-                    ),
-
-                TextColumn::make('period_start')
-                    ->label('Tanggal Awal')
-                    ->date('d M Y')
+                TextColumn::make('id')
+                    ->label('Run')
+                    ->formatStateUsing(
+                        fn ($state): string => '#'.$state
+                    )
                     ->sortable(),
 
-                TextColumn::make('period_end')
-                    ->label('Tanggal Akhir')
-                    ->date('d M Y')
-                    ->sortable(),
+                TextColumn::make('k')
+                    ->label('K')
+                    ->numeric(),
 
-                TextColumn::make('cluster_count')
-                    ->label('Jumlah Klaster')
-                    ->numeric()
-                    ->sortable(),
+                TextColumn::make('total_source_records')
+                    ->label('Data Sumber')
+                    ->numeric(),
+
+                TextColumn::make('valid_source_records')
+                    ->label('Data Valid')
+                    ->numeric(),
+
+                TextColumn::make('excluded_records')
+                    ->label('Dikeluarkan')
+                    ->numeric(),
+
+                TextColumn::make('total_points')
+                    ->label('Titik K-Means')
+                    ->numeric(),
+
+                TextColumn::make('iterations')
+                    ->label('Iterasi')
+                    ->numeric(),
+
+                TextColumn::make('wcss')
+                    ->label('WCSS')
+                    ->numeric(decimalPlaces: 8),
+
+                TextColumn::make('silhouette_score')
+                    ->label('Silhouette')
+                    ->numeric(decimalPlaces: 6),
 
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()
+                    ->formatStateUsing(
+                        fn ($state): string => match ($state) {
+                            'completed' => 'Selesai',
+                            'processing' => 'Diproses',
+                            'failed' => 'Gagal',
+                            default => ucfirst((string) $state),
+                        }
+                    )
+                    ->color(
+                        fn ($state): string => match ($state) {
+                            'completed' => 'success',
+                            'processing' => 'warning',
+                            'failed' => 'danger',
+                            default => 'gray',
+                        }
+                    ),
+
+                TextColumn::make('processed_at')
+                    ->label('Waktu Proses')
+                    ->dateTime('d-m-Y H:i')
                     ->sortable(),
-
-                TextColumn::make('iterations')
-                    ->label('Iterasi')
-                    ->numeric()
-                    ->placeholder('-')
-                    ->sortable(),
-
-                TextColumn::make('wcss')
-                    ->label('WCSS')
-                    ->numeric(decimalPlaces: 6)
-                    ->placeholder('-')
-                    ->sortable(),
-
-                TextColumn::make('silhouette_score')
-                    ->label('Silhouette Score')
-                    ->numeric(decimalPlaces: 6)
-                    ->placeholder('-')
-                    ->sortable(),
-
-                TextColumn::make('davies_bouldin_index')
-                    ->label('Davies-Bouldin Index')
-                    ->numeric(decimalPlaces: 6)
-                    ->placeholder('-')
-                    ->sortable(),
-
-                TextColumn::make('executor.name')
-                    ->label('Dijalankan Oleh')
-                    ->placeholder('-')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('executed_at')
-                    ->label('Waktu Pelaksanaan')
-                    ->dateTime('d M Y H:i')
-                    ->placeholder('-')
-                    ->sortable(),
-
-                TextColumn::make('created_at')
-                    ->label('Dibuat Pada')
-                    ->dateTime('d M Y H:i')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('updated_at')
-                    ->label('Diperbarui Pada')
-                    ->dateTime('d M Y H:i')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('status')
                     ->label('Status')
                     ->options([
-                        'pending' => 'Menunggu',
-                        'processing' => 'Sedang Diproses',
                         'completed' => 'Selesai',
+                        'processing' => 'Diproses',
                         'failed' => 'Gagal',
                     ]),
             ])
             ->recordActions([
                 ViewAction::make()
                     ->label('Lihat'),
-                EditAction::make()
-                    ->label('Ubah'),
             ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make()
-                        ->label('Hapus yang dipilih'),
-                ])
-                    ->label('Tindakan'),
+            ->toolbarActions([])
+            ->paginated([
+                10,
+                25,
+                50,
             ])
+            ->defaultPaginationPageOption(10)
             ->emptyStateHeading('Belum ada proses K-Means')
             ->emptyStateDescription(
-                'Buat proses K-Means untuk melakukan klasterisasi beban kerja setiap seksi.',
+                'Jalankan proses K-Means untuk menghasilkan clustering data pelayanan.'
             )
             ->emptyStateIcon('heroicon-o-chart-bar-square');
     }

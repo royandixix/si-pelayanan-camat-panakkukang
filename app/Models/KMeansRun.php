@@ -2,59 +2,48 @@
 
 namespace App\Models;
 
-use App\Enums\KMeansRunStatus;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class KMeansRun extends Model
 {
-    use HasFactory;
+    protected $table = 'kmeans_runs';
 
     protected $fillable = [
-        'period_start',
-        'period_end',
-        'cluster_count',
-        'status',
+        'k',
+        'total_source_records',
+        'valid_source_records',
+        'excluded_records',
+        'total_points',
+        'features',
+        'normalization',
         'iterations',
         'wcss',
         'silhouette_score',
-        'davies_bouldin_index',
-        'input_snapshot',
-        'executed_by',
-        'executed_at',
-        'error_message',
-        'notes',
+        'cluster_centroids',
+        'status',
+        'processed_at',
     ];
 
     protected function casts(): array
     {
         return [
-            'period_start' => 'date',
-            'period_end' => 'date',
-            'cluster_count' => 'integer',
-            'status' => KMeansRunStatus::class,
+            'k' => 'integer',
+            'total_source_records' => 'integer',
+            'valid_source_records' => 'integer',
+            'excluded_records' => 'integer',
+            'total_points' => 'integer',
+            'features' => 'array',
             'iterations' => 'integer',
-            'wcss' => 'decimal:6',
-            'silhouette_score' => 'decimal:6',
-            'davies_bouldin_index' => 'decimal:6',
-            'input_snapshot' => 'array',
-            'executed_at' => 'datetime',
+            'wcss' => 'float',
+            'silhouette_score' => 'float',
+            'cluster_centroids' => 'array',
+            'processed_at' => 'datetime',
         ];
-    }
-
-    public function executor(): BelongsTo
-    {
-        return $this->belongsTo(
-            User::class,
-            'executed_by',
-        );
     }
 
     public function results(): HasMany
     {
-        return $this->hasMany(KMeansResult::class)
-            ->orderBy('rank');
+        return $this->hasMany(KMeansResult::class, 'kmeans_run_id');
     }
 }
