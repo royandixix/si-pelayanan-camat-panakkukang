@@ -18,11 +18,15 @@ class UserForm
             ->components([
                 Select::make('role')
                     ->label('Peran')
-                    ->options(UserRole::class)
+                    ->options(UserRole::formOptions())
                     ->default(UserRole::MASYARAKAT->value)
                     ->live()
                     ->afterStateUpdated(function ($state, callable $set): void {
-                        if ($state !== UserRole::ADMIN_SEKSI->value) {
+                        if (! in_array(
+                            $state,
+                            UserRole::adminSeksiValues(),
+                            true,
+                        )) {
                             $set('section_id', null);
                         }
                     })
@@ -41,15 +45,27 @@ class UserForm
                     ->preload()
                     ->visible(
                         fn ($get): bool =>
-                            $get('role') === UserRole::ADMIN_SEKSI->value,
+                            in_array(
+                                $get('role'),
+                                UserRole::adminSeksiValues(),
+                                true,
+                            ),
                     )
                     ->required(
                         fn ($get): bool =>
-                            $get('role') === UserRole::ADMIN_SEKSI->value,
+                            in_array(
+                                $get('role'),
+                                UserRole::adminSeksiValues(),
+                                true,
+                            ),
                     )
                     ->dehydrated(
                         fn ($get): bool =>
-                            $get('role') === UserRole::ADMIN_SEKSI->value,
+                            in_array(
+                                $get('role'),
+                                UserRole::adminSeksiValues(),
+                                true,
+                            ),
                     ),
 
                 TextInput::make('name')

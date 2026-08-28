@@ -83,7 +83,13 @@ class ServiceResource extends Resource
 
     public static function canCreate(): bool
     {
-        return auth()->user()?->isSuperAdmin() ?? false;
+        $user = auth()->user();
+
+        return ($user?->isSuperAdmin() ?? false)
+            || (
+                ($user?->isAdminSeksi() ?? false)
+                && $user->section_id !== null
+            );
     }
 
     public static function canView($record): bool
@@ -100,7 +106,15 @@ class ServiceResource extends Resource
 
     public static function canEdit($record): bool
     {
-        return auth()->user()?->isSuperAdmin() ?? false;
+        $user = auth()->user();
+
+        if ($user?->isSuperAdmin()) {
+            return true;
+        }
+
+        return ($user?->isAdminSeksi() ?? false)
+            && $user->section_id !== null
+            && $record->section_id === $user->section_id;
     }
 
     public static function canDelete($record): bool

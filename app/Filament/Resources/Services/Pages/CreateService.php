@@ -11,6 +11,23 @@ class CreateService extends CreateRecord
 
     protected static ?string $title = 'Tambah Data Layanan';
 
+    protected function mutateFormDataBeforeCreate(
+        array $data,
+    ): array {
+        $user = auth()->user();
+
+        if ($user?->isAdminSeksi()) {
+            abort_if(
+                $user->section_id === null,
+                403
+            );
+
+            $data['section_id'] = $user->section_id;
+        }
+
+        return $data;
+    }
+
     protected function getFormActions(): array
     {
         return [

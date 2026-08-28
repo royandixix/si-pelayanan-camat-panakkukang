@@ -19,7 +19,7 @@ class ListServices extends ListRecords
                 ->label('Tambah Layanan')
                 ->visible(
                     fn (): bool =>
-                        auth()->user()?->isSuperAdmin() ?? false,
+                        ServiceResource::canCreate(),
                 ),
         ];
     }

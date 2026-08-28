@@ -115,8 +115,20 @@ class ServicesTable
                 EditAction::make()
                     ->label('Ubah')
                     ->visible(
-                        fn (): bool =>
-                            auth()->user()?->isSuperAdmin() ?? false
+                        function ($record): bool {
+                            $user = auth()->user();
+
+                            if ($user?->isSuperAdmin()) {
+                                return true;
+                            }
+
+                            return (
+                                $user?->isAdminSeksi() ?? false
+                            )
+                                && $user->section_id !== null
+                                && $record->section_id
+                                    === $user->section_id;
+                        }
                     ),
             ])
             ->toolbarActions([

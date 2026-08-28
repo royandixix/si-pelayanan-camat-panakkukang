@@ -86,7 +86,7 @@ class UsersTable
             ->filters([
                 SelectFilter::make('role')
                     ->label('Peran')
-                    ->options(UserRole::class),
+                    ->options(UserRole::formOptions()),
 
                 SelectFilter::make('section_id')
                     ->label('Seksi')

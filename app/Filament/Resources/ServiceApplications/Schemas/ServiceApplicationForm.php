@@ -55,7 +55,7 @@ class ServiceApplicationForm
                         name: 'assignedAdmin',
                         titleAttribute: 'name',
                         modifyQueryUsing: fn ($query) => $query
-                            ->where('role', UserRole::ADMIN_SEKSI->value)
+                            ->whereIn('role', UserRole::adminSeksiValues())
                             ->where('is_active', true)
                             ->orderBy('name'),
                     )

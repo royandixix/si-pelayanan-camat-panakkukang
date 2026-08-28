@@ -4,6 +4,7 @@ namespace App\Filament\Resources\AdminSeksis\Pages;
 
 use App\Enums\UserRole;
 use App\Filament\Resources\AdminSeksis\AdminSeksiResource;
+use App\Models\Section;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
@@ -19,7 +20,12 @@ class EditAdminSeksi extends EditRecord
     protected function mutateFormDataBeforeSave(
         array $data,
     ): array {
-        $data['role'] = UserRole::ADMIN_SEKSI->value;
+        $section = Section::query()
+            ->findOrFail($data['section_id']);
+
+        $data['role'] = UserRole::fromSectionName(
+            $section->name
+        )->value;
 
         unset($data['password_confirmation']);
 

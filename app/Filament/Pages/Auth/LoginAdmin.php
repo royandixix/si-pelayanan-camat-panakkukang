@@ -30,7 +30,11 @@ class LoginAdmin extends Login
             ->label('Masuk Sebagai')
             ->options([
                 UserRole::SUPER_ADMIN->value => UserRole::SUPER_ADMIN->label(),
-                UserRole::ADMIN_SEKSI->value => UserRole::ADMIN_SEKSI->label(),
+                UserRole::ADMIN_PMKS->value => UserRole::ADMIN_PMKS->label(),
+                UserRole::ADMIN_PEMERINTAHAN->value => UserRole::ADMIN_PEMERINTAHAN->label(),
+                UserRole::ADMIN_TRANTIB->value => UserRole::ADMIN_TRANTIB->label(),
+                UserRole::ADMIN_PELAYANAN->value => UserRole::ADMIN_PELAYANAN->label(),
+                UserRole::ADMIN_KEBERSIHAN->value => UserRole::ADMIN_KEBERSIHAN->label(),
             ])
             ->placeholder('Pilih role akun')
             ->native(false)

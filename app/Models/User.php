@@ -51,14 +51,7 @@ class User extends Authenticatable implements FilamentUser
         }
 
         return match ($panel->getId()) {
-            'admin' => in_array(
-                $this->role,
-                [
-                    UserRole::SUPER_ADMIN,
-                    UserRole::ADMIN_SEKSI,
-                ],
-                true,
-            ),
+            'admin' => $this->isSuperAdmin() || $this->isAdminSeksi(),
             'pimpinan' => $this->role === UserRole::PIMPINAN,
             default => false,
         };
@@ -107,7 +100,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function isAdminSeksi(): bool
     {
-        return $this->hasRole(UserRole::ADMIN_SEKSI);
+        return $this->role?->isAdminSeksi() ?? false;
     }
 
     public function isPimpinan(): bool

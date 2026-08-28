@@ -13,6 +13,23 @@ class EditService extends EditRecord
 
     protected static ?string $title = 'Ubah Data Layanan';
 
+    protected function mutateFormDataBeforeSave(
+        array $data,
+    ): array {
+        $user = auth()->user();
+
+        if ($user?->isAdminSeksi()) {
+            abort_if(
+                $user->section_id === null,
+                403
+            );
+
+            $data['section_id'] = $user->section_id;
+        }
+
+        return $data;
+    }
+
     protected function getHeaderActions(): array
     {
         return [
@@ -20,6 +37,10 @@ class EditService extends EditRecord
                 ->label('Lihat'),
             DeleteAction::make()
                 ->label('Hapus')
+                ->visible(
+                    fn (): bool =>
+                        auth()->user()?->isSuperAdmin() ?? false
+                )
                 ->modalHeading('Hapus data layanan')
                 ->modalDescription('Apakah Anda yakin ingin menghapus data layanan ini?')
                 ->modalSubmitActionLabel('Hapus')

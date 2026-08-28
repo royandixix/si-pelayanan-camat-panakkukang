@@ -158,6 +158,16 @@ class AdminSeksiResource extends Resource
                     ->searchable()
                     ->sortable(),
 
+                TextColumn::make('role')
+                    ->label('Role Admin')
+                    ->badge()
+                    ->formatStateUsing(
+                        fn ($state): string =>
+                            $state instanceof UserRole
+                                ? $state->label()
+                                : (UserRole::tryFrom((string) $state)?->label() ?? (string) $state)
+                    ),
+
                 TextColumn::make('nik')
                     ->label('NIK')
                     ->searchable()
@@ -254,9 +264,9 @@ class AdminSeksiResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->where(
+            ->whereIn(
                 'role',
-                UserRole::ADMIN_SEKSI->value,
+                UserRole::adminSeksiValues(),
             );
     }
 

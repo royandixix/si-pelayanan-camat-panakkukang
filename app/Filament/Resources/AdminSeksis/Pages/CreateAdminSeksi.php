@@ -4,6 +4,7 @@ namespace App\Filament\Resources\AdminSeksis\Pages;
 
 use App\Enums\UserRole;
 use App\Filament\Resources\AdminSeksis\AdminSeksiResource;
+use App\Models\Section;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateAdminSeksi extends CreateRecord
@@ -20,7 +21,13 @@ class CreateAdminSeksi extends CreateRecord
     protected function mutateFormDataBeforeCreate(
         array $data,
     ): array {
-        $data['role'] = UserRole::ADMIN_SEKSI->value;
+        $section = Section::query()
+            ->findOrFail($data['section_id']);
+
+        $data['role'] = UserRole::fromSectionName(
+            $section->name
+        )->value;
+
         $data['is_active'] = $data['is_active'] ?? true;
         $data['email_verified_at'] = now();
 

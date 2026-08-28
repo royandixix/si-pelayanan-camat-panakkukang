@@ -20,13 +20,42 @@ class ServiceForm
                     ->relationship(
                         name: 'section',
                         titleAttribute: 'name',
-                        modifyQueryUsing: fn ($query) => $query
-                            ->where('is_active', true)
-                            ->orderBy('name'),
+                        modifyQueryUsing: function ($query) {
+                            $user = auth()->user();
+
+                            if (
+                                $user?->isAdminSeksi()
+                                && $user->section_id !== null
+                            ) {
+                                return $query->whereKey(
+                                    $user->section_id
+                                );
+                            }
+
+                            return $query
+                                ->where('is_active', true)
+                                ->orderBy('name');
+                        },
                     )
+                    ->default(
+                        fn () =>
+                            auth()->user()?->isAdminSeksi()
+                                ? auth()->user()?->section_id
+                                : null
+                    )
+                    ->disabled(
+                        fn (): bool =>
+                            auth()->user()?->isAdminSeksi() ?? false
+                    )
+                    ->dehydrated()
                     ->searchable()
                     ->preload()
-                    ->helperText('Layanan yang dibuat akan otomatis menjadi layanan pada seksi yang dipilih.')
+                    ->helperText(
+                        fn (): string =>
+                            auth()->user()?->isAdminSeksi()
+                                ? 'Layanan otomatis disimpan ke seksi Anda.'
+                                : 'Layanan yang dibuat akan otomatis menjadi layanan pada seksi yang dipilih.'
+                    )
                     ->required(),
 
                 TextInput::make('code')
