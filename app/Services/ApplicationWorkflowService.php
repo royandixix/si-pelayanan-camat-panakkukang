@@ -97,9 +97,7 @@ class ApplicationWorkflowService
         ServiceApplication $application,
         User $user,
     ): void {
-        if ($user->isSuperAdmin()) {
-            return;
-        }
+        $application->loadMissing('service');
 
         if (
             ! $user->isAdminSeksi()

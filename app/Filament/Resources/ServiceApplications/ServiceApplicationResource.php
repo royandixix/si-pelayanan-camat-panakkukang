@@ -66,6 +66,7 @@ class ServiceApplicationResource extends Resource
                 'service.section',
                 'assignedAdmin',
                 'documents.requirement',
+                'result',
             ]);
 
         $user = Auth::user();

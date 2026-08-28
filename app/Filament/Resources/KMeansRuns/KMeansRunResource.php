@@ -11,6 +11,7 @@ use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
@@ -56,6 +57,20 @@ class KMeansRunResource extends Resource
     public static function table(Table $table): Table
     {
         return KMeansRunsTable::configure($table);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $latestCompletedId = KMeansRun::query()
+            ->where('status', 'completed')
+            ->max('id');
+
+        return parent::getEloquentQuery()
+            ->when(
+                $latestCompletedId !== null,
+                fn (Builder $query): Builder =>
+                    $query->whereKey($latestCompletedId),
+            );
     }
 
     public static function canViewAny(): bool

@@ -15,17 +15,25 @@ class ListKMeansRuns extends ListRecords
 
     protected static ?string $title = 'Proses K-Means';
 
+    protected string $view =
+        'filament.resources.k-means-runs.pages.list-k-means-runs';
+
     protected function getHeaderActions(): array
     {
         return [
             Action::make('runKMeans')
-                ->label('Jalankan Proses K-Means')
-                ->icon('heroicon-o-play')
+                ->label('Proses Ulang K-Means')
+                ->icon('heroicon-o-arrow-path')
                 ->color('primary')
+                ->disabled(
+                    fn (): bool =>
+                        ! app(KMeansService::class)
+                            ->hasDatasetChanged()
+                )
                 ->requiresConfirmation()
-                ->modalHeading('Jalankan Proses K-Means')
+                ->modalHeading('Proses Ulang K-Means')
                 ->modalDescription(
-                    'Sistem akan memproses data valid menggunakan K = 3 dengan normalisasi Z-Score.'
+                    'Proses hanya dilakukan apabila data sumber penelitian mengalami perubahan.'
                 )
                 ->action(function (): void {
                     try {
@@ -45,14 +53,16 @@ class ListKMeansRuns extends ListRecords
                         $this->redirect(
                             KMeansRunResource::getUrl(
                                 'view',
-                                ['record' => $run->id]
+                                [
+                                    'record' => $run->id,
+                                ]
                             )
                         );
                     } catch (Throwable $e) {
                         Notification::make()
-                            ->title('Proses K-Means gagal')
+                            ->title('Proses K-Means tidak dijalankan')
                             ->body($e->getMessage())
-                            ->danger()
+                            ->warning()
                             ->send();
                     }
                 }),

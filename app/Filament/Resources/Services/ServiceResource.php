@@ -25,8 +25,7 @@ class ServiceResource extends Resource
     protected static string|\UnitEnum|null $navigationGroup =
         'Data Utama';
 
-    protected static ?string $navigationLabel =
-        'Data Layanan';
+    protected static ?string $navigationLabel = 'Master Layanan';
 
     protected static ?string $modelLabel =
         'Layanan';

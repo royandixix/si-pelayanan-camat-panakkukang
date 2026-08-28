@@ -5,6 +5,7 @@ namespace App\Filament\Resources\ServiceApplications\Pages;
 use App\Enums\ApplicationStatus;
 use App\Filament\Actions\UploadApplicationResultAction;
 use App\Filament\Resources\ServiceApplications\ServiceApplicationResource;
+use App\Models\User;
 use App\Services\ApplicationWorkflowService;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Textarea;
@@ -20,6 +21,22 @@ class ViewServiceApplication extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('unduhHasilPdf')
+                ->label('Unduh Hasil PDF')
+                ->icon('heroicon-o-arrow-down-tray')
+                ->color('success')
+                ->url(
+                    fn (): string => route(
+                        'admin.permohonan.hasil.download',
+                        $this->record,
+                    ),
+                )
+                ->visible(
+                    fn (): bool => filled(
+                        $this->record->result?->path,
+                    ),
+                ),
+
             $this->statusAction(
                 'startVerification',
                 'Mulai Verifikasi',
@@ -75,15 +92,6 @@ class ViewServiceApplication extends ViewRecord
             UploadApplicationResultAction::make(),
 
             $this->statusAction(
-                'complete',
-                'Selesaikan Tanpa Dokumen Hasil',
-                ApplicationStatus::COMPLETED,
-                'heroicon-o-check-badge',
-                'success',
-                [ApplicationStatus::PROCESSING],
-            ),
-
-            $this->statusAction(
                 'collect',
                 'Sudah Diambil',
                 ApplicationStatus::COLLECTED,
@@ -92,6 +100,16 @@ class ViewServiceApplication extends ViewRecord
                 [ApplicationStatus::COMPLETED],
             ),
         ];
+    }
+
+    private function canProcessRecord(): bool
+    {
+        $user = auth()->user();
+
+        return $user instanceof User
+            && $user->isAdminSeksi()
+            && $user->section_id !== null
+            && $this->record->service?->section_id === $user->section_id;
     }
 
     private function statusAction(
@@ -108,11 +126,12 @@ class ViewServiceApplication extends ViewRecord
             ->icon($icon)
             ->color($color)
             ->visible(
-                fn (): bool => in_array(
-                    $this->record->status,
-                    $visibleStatuses,
-                    true,
-                ),
+                fn (): bool => $this->canProcessRecord()
+                    && in_array(
+                        $this->record->status,
+                        $visibleStatuses,
+                        true,
+                    ),
             )
             ->schema([
                 Textarea::make('notes')

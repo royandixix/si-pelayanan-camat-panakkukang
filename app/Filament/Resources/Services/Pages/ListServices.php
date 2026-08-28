@@ -10,7 +10,7 @@ class ListServices extends ListRecords
 {
     protected static string $resource = ServiceResource::class;
 
-    protected static ?string $title = 'Data Layanan Berdasarkan Seksi';
+    protected static ?string $title = 'Master Layanan Berdasarkan Seksi';
 
     protected function getHeaderActions(): array
     {

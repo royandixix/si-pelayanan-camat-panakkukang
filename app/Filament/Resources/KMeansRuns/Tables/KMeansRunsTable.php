@@ -15,7 +15,7 @@ class KMeansRunsTable
             ->defaultSort('id', 'desc')
             ->columns([
                 TextColumn::make('id')
-                    ->label('Run')
+                    ->label('Run Final')
                     ->formatStateUsing(
                         fn ($state): string => '#'.$state
                     )

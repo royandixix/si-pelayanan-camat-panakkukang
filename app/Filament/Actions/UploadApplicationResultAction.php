@@ -45,9 +45,6 @@ class UploadApplicationResultAction
 
                 Textarea::make('notes')
                     ->label('Keterangan')
-                    ->placeholder(
-                        'Keterangan tambahan mengenai dokumen hasil.',
-                    )
                     ->rows(3)
                     ->maxLength(1000),
             ])
@@ -68,7 +65,10 @@ class UploadApplicationResultAction
 
                 abort_unless(
                     $pengguna instanceof User
-                    && $pengguna->is_active,
+                    && $pengguna->is_active
+                    && $pengguna->isAdminSeksi()
+                    && $pengguna->section_id !== null
+                    && $record->service?->section_id === $pengguna->section_id,
                     403,
                 );
 
@@ -87,22 +87,32 @@ class UploadApplicationResultAction
                     ->success()
                     ->title('Dokumen hasil diterbitkan')
                     ->body(
-                        'Permohonan telah diselesaikan dan masyarakat sudah menerima notifikasi.',
+                        'Permohonan telah selesai dan masyarakat sudah menerima notifikasi.',
                     )
                     ->send();
             })
             ->visible(function (
                 ServiceApplication $record,
             ): bool {
+                $pengguna = auth()->user();
+
+                if (
+                    ! $pengguna instanceof User
+                    || ! $pengguna->isAdminSeksi()
+                    || $pengguna->section_id === null
+                    || $record->service?->section_id !== $pengguna->section_id
+                ) {
+                    return false;
+                }
+
                 $status = $record->status instanceof BackedEnum
-                    ? (string) $record->status->value
+                    ? $record->status->value
                     : (string) $record->status;
 
                 return in_array(
                     $status,
                     [
                         ApplicationStatus::PROCESSING->value,
-                        ApplicationStatus::APPROVED->value,
                         ApplicationStatus::COMPLETED->value,
                     ],
                     true,

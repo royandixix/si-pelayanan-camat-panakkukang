@@ -16,6 +16,12 @@ class KMeansService
             throw new RuntimeException('Penelitian ini menggunakan K = 3.');
         }
 
+        if (! $this->hasDatasetChanged()) {
+            throw new RuntimeException(
+                'Data sumber K-Means belum berubah. Proses ulang tidak diperlukan.'
+            );
+        }
+
         $totalSourceRecords = ResearchDatasetRecord::query()->count();
 
         $validSourceRecords = ResearchDatasetRecord::query()
@@ -126,6 +132,70 @@ class KMeansService
 
             return $run->fresh('results');
         });
+    }
+
+    public function hasDatasetChanged(): bool
+    {
+        $latestRun = KMeansRun::query()
+            ->where('status', 'completed')
+            ->latest('id')
+            ->first();
+
+        if (! $latestRun) {
+            return true;
+        }
+
+        $currentPoints = $this->buildPoints();
+
+        $previousPoints = KMeansResult::query()
+            ->where('kmeans_run_id', $latestRun->id)
+            ->orderBy('year')
+            ->orderBy('month')
+            ->orderBy('dataset_name')
+            ->get([
+                'dataset_name',
+                'year',
+                'month',
+                'jumlah_pelayanan',
+                'hari_aktif',
+            ])
+            ->map(
+                fn (KMeansResult $result): array => [
+                    'dataset_name' => $result->dataset_name,
+                    'year' => $result->year,
+                    'month' => $result->month,
+                    'jumlah_pelayanan' => $result->jumlah_pelayanan,
+                    'hari_aktif' => $result->hari_aktif,
+                ]
+            )
+            ->values()
+            ->all();
+
+        return $this->makePointsSignature($currentPoints)
+            !== $this->makePointsSignature($previousPoints);
+    }
+
+    private function makePointsSignature(array $points): string
+    {
+        $canonical = array_map(
+            fn (array $point): array => [
+                'dataset_name' => (string) $point['dataset_name'],
+                'year' => (int) $point['year'],
+                'month' => (int) $point['month'],
+                'jumlah_pelayanan' => (int) $point['jumlah_pelayanan'],
+                'hari_aktif' => (int) $point['hari_aktif'],
+            ],
+            $points
+        );
+
+        return hash(
+            'sha256',
+            (string) json_encode(
+                $canonical,
+                JSON_UNESCAPED_UNICODE
+                | JSON_UNESCAPED_SLASHES
+            )
+        );
     }
 
     private function buildPoints(): array

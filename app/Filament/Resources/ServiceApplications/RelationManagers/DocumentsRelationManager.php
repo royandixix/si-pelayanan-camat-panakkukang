@@ -14,7 +14,6 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class DocumentsRelationManager extends RelationManager
 {
@@ -69,7 +68,16 @@ class DocumentsRelationManager extends RelationManager
                 Action::make('openDocument')
                     ->label('Buka')
                     ->icon('heroicon-o-eye')
-                    ->url(fn(ApplicationDocument $record): string => Storage::url($record->path))
+                    ->url(
+                        fn (ApplicationDocument $record): string =>
+                            route(
+                                'admin.permohonan.dokumen.open',
+                                [
+                                    'permohonan' => $record->application_id,
+                                    'dokumen' => $record->id,
+                                ],
+                            ),
+                    )
                     ->openUrlInNewTab(),
                 Action::make('verifyDocument')
                     ->label('Periksa')

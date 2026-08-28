@@ -69,3 +69,24 @@ Route::middleware('auth')
 Route::post('/logout', [LoginMasyarakatController::class, 'destroy'])
     ->middleware('auth')
     ->name('logout');
+
+
+Route::middleware('auth:admin')
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function (): void {
+        Route::get(
+            '/permohonan-layanan/{permohonan}/hasil/unduh',
+            [\App\Http\Controllers\Admin\HasilPelayananAdminController::class, 'download'],
+        )->name('permohonan.hasil.download');
+    });
+
+Route::middleware('auth:admin')
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function (): void {
+        Route::get(
+            '/permohonan-layanan/{permohonan}/dokumen/{dokumen}/buka',
+            [\App\Http\Controllers\Admin\DokumenPermohonanAdminController::class, 'show'],
+        )->name('permohonan.dokumen.open');
+    });
