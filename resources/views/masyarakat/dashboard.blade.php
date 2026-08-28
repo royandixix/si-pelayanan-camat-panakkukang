@@ -317,11 +317,11 @@
                             'Dipanggil',
                             'bg-blue-50 text-blue-700',
                         ],
-                        'serving', 'in_service' => [
+                        'serving' => [
                             'Sedang Dilayani',
                             'bg-violet-50 text-violet-700',
                         ],
-                        'served' => [
+                        'completed' => [
                             'Selesai',
                             'bg-emerald-50 text-emerald-700',
                         ],

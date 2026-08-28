@@ -80,7 +80,7 @@ class DasborController extends Controller
             ->where('user_id', $pengguna->id)
             ->whereDate('queue_date', '>=', today())
             ->whereNotIn('status', [
-                'served',
+                'completed',
                 'cancelled',
             ])
             ->orderBy('queue_date')

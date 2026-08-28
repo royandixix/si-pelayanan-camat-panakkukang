@@ -349,7 +349,7 @@
                 </h3>
 
                 <div class="km-panel-desc">
-                    Evaluasi Run Final #{{ $run->id }} menggunakan label referensi dan Confusion Matrix.
+                    Evaluasi Run Final #{{ $run->id }} menggunakan label referensi berbasis aturan dan Confusion Matrix.
                 </div>
             </div>
 
@@ -366,12 +366,12 @@
                     </div>
 
                     <div class="km-stat km-stat-success">
-                        <div class="km-stat-label">Sudah Validasi</div>
+                        <div class="km-stat-label">Label Referensi Terisi</div>
                         <div class="km-stat-value">{{ $validated->count() }}</div>
                     </div>
 
                     <div class="km-stat km-stat-warning">
-                        <div class="km-stat-label">Belum Validasi</div>
+                        <div class="km-stat-label">Belum Terisi</div>
                         <div class="km-stat-value">
                             {{ $results->count() - $validated->count() }}
                         </div>
@@ -751,187 +751,235 @@
                 </h3>
 
                 <div class="km-panel-desc">
-                    Penjelasan rumus evaluasi K-Means menggunakan Confusion Matrix
-                    dengan pendekatan One-vs-Rest.
+                    Seluruh angka dihitung otomatis dari Run Final yang sedang ditampilkan.
                 </div>
             </div>
 
             <div class="km-panel-body">
                 <div class="km-formula">
-                    <strong>1. True Positive (TP)</strong><br>
-                    TP adalah jumlah data pada suatu kelas yang diprediksi
-                    dengan benar sebagai kelas tersebut.<br><br>
+                    <strong>Label Referensi Berbasis Aturan</strong><br><br>
 
-                    <strong>2. True Negative (TN)</strong><br>
-                    TN adalah jumlah data yang bukan termasuk suatu kelas
-                    dan juga tidak diprediksi sebagai kelas tersebut.<br><br>
+                    Label referensi dibentuk secara independen dari hasil K-Means
+                    menggunakan fitur Jumlah Pelayanan dan Hari Aktif.
+                    Kedua fitur dinormalisasi menggunakan Z-Score.<br><br>
 
-                    <strong>3. False Positive (FP)</strong><br>
-                    FP adalah jumlah data dari kelas lain yang salah
-                    diprediksi sebagai kelas yang sedang diuji.<br><br>
+                    Z = (x - μ) / σ<br><br>
 
-                    <strong>4. False Negative (FN)</strong><br>
-                    FN adalah jumlah data suatu kelas yang salah
-                    diprediksi sebagai kelas lain.
+                    Indeks beban pelayanan:<br>
+
+                    S = (Z Jumlah Pelayanan + Z Hari Aktif) / 2<br><br>
+
+                    Nilai indeks kemudian dibagi berdasarkan tercile menjadi
+                    kategori Rendah, Sedang, dan Tinggi.
+                    Label referensi tidak diperoleh dengan menyalin hasil K-Means.
                 </div>
 
                 <div class="km-formula">
-                    <strong>Rumus Accuracy Per Kelas</strong><br><br>
+                    <strong>Definisi TP, TN, FP, dan FN</strong><br><br>
+
+                    TP = data kelas yang diuji dan diprediksi benar sebagai kelas tersebut.<br>
+
+                    TN = data bukan kelas yang diuji dan juga tidak diprediksi sebagai kelas tersebut.<br>
+
+                    FP = data kelas lain yang salah diprediksi sebagai kelas yang diuji.<br>
+
+                    FN = data kelas yang diuji tetapi salah diprediksi sebagai kelas lain.
+                </div>
+
+                <div class="km-formula">
+                    <strong>Rumus Evaluasi</strong><br><br>
 
                     Accuracy =
-                    ((TP + TN) / (TP + TN + FP + FN)) × 100%
-                </div>
-
-                <div class="km-formula">
-                    <strong>Rumus Precision</strong><br><br>
+                    ((TP + TN) / (TP + TN + FP + FN)) × 100%<br><br>
 
                     Precision =
-                    TP / (TP + FP) × 100%
-                </div>
-
-                <div class="km-formula">
-                    <strong>Rumus Recall</strong><br><br>
+                    (TP / (TP + FP)) × 100%<br><br>
 
                     Recall =
-                    TP / (TP + FN) × 100%
-                </div>
-
-                <div class="km-formula">
-                    <strong>Rumus F1-Score</strong><br><br>
+                    (TP / (TP + FN)) × 100%<br><br>
 
                     F1-Score =
                     2 × ((Precision × Recall) / (Precision + Recall))
                 </div>
 
                 <div class="km-formula">
-                    <strong>Rumus Accuracy Keseluruhan</strong><br><br>
+                    <strong>Accuracy Keseluruhan</strong><br><br>
 
                     Accuracy =
                     (Jumlah Prediksi Benar / Jumlah Data Uji) × 100%<br><br>
 
-                    Accuracy =
-                    (21 / 25) × 100%<br><br>
+                    @if ($ready)
+                        Accuracy =
+                        ({{ $correct }} / {{ $results->count() }}) × 100%<br><br>
 
-                    <strong>Accuracy = 84,00%</strong>
+                        <strong>
+                            Accuracy =
+                            {{ number_format($overallAccuracy, 2, ',', '.') }}%
+                        </strong>
+                    @else
+                        <strong>
+                            Menunggu seluruh label referensi terisi.
+                        </strong>
+                    @endif
                 </div>
 
+                @foreach ($labels as $label)
+                    @php
+                        $m = $metrics[$label];
+
+                        $totalKelas =
+                            $m['tp']
+                            + $m['tn']
+                            + $m['fp']
+                            + $m['fn'];
+                    @endphp
+
+                    <div class="km-formula">
+                        <strong>
+                            Perhitungan Kelas {{ $label }}
+                        </strong><br><br>
+
+                        TP = {{ $ready ? $m['tp'] : '-' }},
+                        TN = {{ $ready ? $m['tn'] : '-' }},
+                        FP = {{ $ready ? $m['fp'] : '-' }},
+                        FN = {{ $ready ? $m['fn'] : '-' }}<br><br>
+
+                        @if ($ready)
+                            Accuracy =
+                            (({{ $m['tp'] }} + {{ $m['tn'] }})
+                            / {{ $totalKelas }}) × 100%
+
+                            =
+                            <strong>
+                                {{ number_format($m['accuracy'], 2, ',', '.') }}%
+                            </strong><br><br>
+
+                            Precision =
+                            {{ $m['tp'] }}
+                            /
+                            ({{ $m['tp'] }} + {{ $m['fp'] }})
+                            × 100%
+
+                            =
+                            <strong>
+                                {{ $m['precision'] !== null
+                                    ? number_format(
+                                        $m['precision'],
+                                        2,
+                                        ',',
+                                        '.'
+                                    ).'%'
+                                    : '-' }}
+                            </strong><br><br>
+
+                            Recall =
+                            {{ $m['tp'] }}
+                            /
+                            ({{ $m['tp'] }} + {{ $m['fn'] }})
+                            × 100%
+
+                            =
+                            <strong>
+                                {{ $m['recall'] !== null
+                                    ? number_format(
+                                        $m['recall'],
+                                        2,
+                                        ',',
+                                        '.'
+                                    ).'%'
+                                    : '-' }}
+                            </strong><br><br>
+
+                            F1-Score =
+                            <strong>
+                                {{ $m['f1'] !== null
+                                    ? number_format(
+                                        $m['f1'],
+                                        2,
+                                        ',',
+                                        '.'
+                                    ).'%'
+                                    : '-' }}
+                            </strong>
+                        @else
+                            Perhitungan menunggu seluruh label referensi terisi.
+                        @endif
+                    </div>
+                @endforeach
+
                 <div class="km-formula">
-                    <strong>Perhitungan Kelas Rendah</strong><br><br>
-
-                    TP = 9,
-                    TN = 13,
-                    FP = 3,
-                    FN = 0<br><br>
-
-                    Accuracy =
-                    ((9 + 13) / 25) × 100%
-                    = <strong>88,00%</strong><br>
-
-                    Precision =
-                    9 / (9 + 3) × 100%
-                    = <strong>75,00%</strong><br>
-
-                    Recall =
-                    9 / (9 + 0) × 100%
-                    = <strong>100,00%</strong><br>
-
-                    F1-Score =
-                    2 × ((75 × 100) / (75 + 100))
-                    = <strong>85,71%</strong>
-                </div>
-
-                <div class="km-formula">
-                    <strong>Perhitungan Kelas Sedang</strong><br><br>
-
-                    TP = 4,
-                    TN = 17,
-                    FP = 0,
-                    FN = 4<br><br>
-
-                    Accuracy =
-                    ((4 + 17) / 25) × 100%
-                    = <strong>84,00%</strong><br>
-
-                    Precision =
-                    4 / (4 + 0) × 100%
-                    = <strong>100,00%</strong><br>
-
-                    Recall =
-                    4 / (4 + 4) × 100%
-                    = <strong>50,00%</strong><br>
-
-                    F1-Score =
-                    2 × ((100 × 50) / (100 + 50))
-                    = <strong>66,67%</strong>
-                </div>
-
-                <div class="km-formula">
-                    <strong>Perhitungan Kelas Tinggi</strong><br><br>
-
-                    TP = 8,
-                    TN = 16,
-                    FP = 1,
-                    FN = 0<br><br>
-
-                    Accuracy =
-                    ((8 + 16) / 25) × 100%
-                    = <strong>96,00%</strong><br>
-
-                    Precision =
-                    8 / (8 + 1) × 100%
-                    = <strong>88,89%</strong><br>
-
-                    Recall =
-                    8 / (8 + 0) × 100%
-                    = <strong>100,00%</strong><br>
-
-                    F1-Score =
-                    2 × ((88,89 × 100) / (88,89 + 100))
-                    = <strong>94,12%</strong>
-                </div>
-
-                <div class="km-formula">
-                    <strong>Macro Precision</strong><br><br>
+                    <strong>Metrik Macro</strong><br><br>
 
                     Macro Precision =
-                    (75,00% + 100,00% + 88,89%) / 3<br>
-
-                    <strong>Macro Precision = 87,96%</strong>
-                </div>
-
-                <div class="km-formula">
-                    <strong>Macro Recall</strong><br><br>
+                    rata-rata Precision seluruh kelas
+                    =
+                    <strong>
+                        {{ $macroPrecision !== null
+                            ? number_format(
+                                $macroPrecision,
+                                2,
+                                ',',
+                                '.'
+                            ).'%'
+                            : '-' }}
+                    </strong><br><br>
 
                     Macro Recall =
-                    (100,00% + 50,00% + 100,00%) / 3<br>
-
-                    <strong>Macro Recall = 83,33%</strong>
-                </div>
-
-                <div class="km-formula">
-                    <strong>Macro F1-Score</strong><br><br>
+                    rata-rata Recall seluruh kelas
+                    =
+                    <strong>
+                        {{ $macroRecall !== null
+                            ? number_format(
+                                $macroRecall,
+                                2,
+                                ',',
+                                '.'
+                            ).'%'
+                            : '-' }}
+                    </strong><br><br>
 
                     Macro F1-Score =
-                    (85,71% + 66,67% + 94,12%) / 3<br>
-
-                    <strong>Macro F1-Score = 82,17%</strong>
+                    rata-rata F1-Score seluruh kelas
+                    =
+                    <strong>
+                        {{ $macroF1 !== null
+                            ? number_format(
+                                $macroF1,
+                                2,
+                                ',',
+                                '.'
+                            ).'%'
+                            : '-' }}
+                    </strong>
                 </div>
 
                 <div class="km-formula">
                     <strong>Interpretasi Hasil</strong><br><br>
 
-                    Dari 25 data uji, sebanyak 21 data berhasil dikelompokkan
-                    sesuai dengan label referensi dan 4 data berbeda dengan
-                    label referensi. Berdasarkan hasil tersebut, K-Means
-                    memperoleh Accuracy keseluruhan sebesar
-                    <strong>84,00%</strong>.<br><br>
+                    @if ($ready)
+                        Dari {{ $results->count() }} data uji,
+                        sebanyak {{ $correct }} data memiliki hasil K-Means
+                        yang sama dengan label referensi dan
+                        {{ $results->count() - $correct }} data memiliki
+                        hasil berbeda.
 
-                    Kelas Tinggi memperoleh performa terbaik dengan Accuracy
-                    96,00%, Precision 88,89%, Recall 100,00%, dan F1-Score
-                    94,12%. Kelas Rendah memperoleh Accuracy 88,00%,
-                    sedangkan kelas Sedang memperoleh Accuracy 84,00%.
-                    Kesalahan terbesar pada kelas Sedang terjadi karena
-                    terdapat 4 False Negative.
+                        Accuracy keseluruhan yang diperoleh sebesar
+
+                        <strong>
+                            {{ number_format(
+                                $overallAccuracy,
+                                2,
+                                ',',
+                                '.'
+                            ) }}%
+                        </strong>.
+
+                        Seluruh nilai pada bagian ini dihitung dari
+                        Run Final yang sama dengan tabel Confusion Matrix.
+                    @else
+                        Interpretasi hasil akan ditampilkan setelah
+                        seluruh label referensi terisi.
+                    @endif
                 </div>
             </div>
         </div>

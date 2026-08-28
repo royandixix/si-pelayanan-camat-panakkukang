@@ -167,24 +167,24 @@ class AntreanController extends Controller
             ->count();
 
         $sedangDilayani = (clone $dasarAntrean)
-            ->whereIn('status', ['serving', 'in_service'])
+            ->whereIn('status', ['serving'])
             ->count();
 
         $selesai = (clone $dasarAntrean)
-            ->where('status', 'served')
+            ->where('status', 'completed')
             ->count();
 
         $antreanAktif = (clone $dasarAntrean)
             ->with(['service', 'section', 'application'])
-            ->whereNotIn('status', ['served', 'cancelled'])
+            ->whereNotIn('status', ['completed', 'cancelled'])
             ->where(function (Builder $query): void {
                 $query
                     ->whereDate('queue_date', '>=', today())
-                    ->orWhereIn('status', ['called', 'serving', 'in_service']);
+                    ->orWhereIn('status', ['called', 'serving']);
             })
             ->orderByRaw("
                 CASE
-                    WHEN status IN ('called', 'serving', 'in_service') THEN 0
+                    WHEN status IN ('called', 'serving') THEN 0
                     ELSE 1
                 END
             ")
@@ -196,7 +196,7 @@ class AntreanController extends Controller
             ->with(['service', 'section', 'application'])
             ->when($status !== '', function (Builder $query) use ($status): void {
                 if ($status === 'serving') {
-                    $query->whereIn('status', ['serving', 'in_service']);
+                    $query->whereIn('status', ['serving']);
 
                     return;
                 }
@@ -251,7 +251,6 @@ class AntreanController extends Controller
                     'waiting',
                     'called',
                     'serving',
-                    'in_service',
                 ])
                 ->count();
         }
@@ -262,7 +261,6 @@ class AntreanController extends Controller
             ->whereIn('status', [
                 'called',
                 'serving',
-                'in_service',
             ])
             ->orderBy('sequence')
             ->first();
@@ -281,7 +279,7 @@ class AntreanController extends Controller
             'waiting' => 'Menunggu',
             'called' => 'Dipanggil',
             'serving' => 'Sedang Dilayani',
-            'served' => 'Selesai',
+            'completed' => 'Selesai',
             'cancelled' => 'Dibatalkan',
         ];
     }

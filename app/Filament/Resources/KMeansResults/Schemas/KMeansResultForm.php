@@ -45,7 +45,7 @@ class KMeansResultForm
                     ])
                     ->columns(2),
 
-                Section::make('Validasi Pakar')
+                Section::make('Label Referensi Berbasis Aturan')
                     ->schema([
                         Select::make('reference_label')
                             ->label('Label Referensi')
@@ -57,7 +57,7 @@ class KMeansResultForm
                             ->native(false)
                             ->required()
                             ->helperText(
-                                'Label ini harus berdasarkan validasi pihak Kecamatan atau pakar, bukan menyalin hasil K-Means.'
+                                'Pada pengujian penelitian ini, label referensi menggunakan aturan berbasis data (Z-Score dan tercile) dan tidak disalin dari hasil K-Means.'
                             ),
                     ]),
             ]);

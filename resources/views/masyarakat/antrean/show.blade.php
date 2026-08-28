@@ -12,12 +12,12 @@
             'bg-blue-50 text-blue-700',
             'Nomor antrean Anda telah dipanggil. Segera menuju loket pelayanan.',
         ],
-        'serving', 'in_service' => [
+        'serving' => [
             'Sedang Dilayani',
             'bg-violet-50 text-violet-700',
             'Permohonan Anda sedang dilayani oleh petugas.',
         ],
-        'served' => [
+        'completed' => [
             'Selesai',
             'bg-emerald-50 text-emerald-700',
             'Proses pelayanan antrean ini telah selesai.',

@@ -24,7 +24,7 @@
         ],
         [
             'label' => 'Selesai',
-            'nilai' => 'served',
+            'nilai' => 'completed',
             'jumlah' => $selesai,
         ],
     ];
@@ -75,13 +75,13 @@
                 'Nomor Anda telah dipanggil. Segera menuju loket pelayanan.',
                 2,
             ],
-            'serving', 'in_service' => [
+            'serving' => [
                 'Sedang Dilayani',
                 'bg-violet-400 text-violet-950',
                 'Permohonan Anda sedang dilayani oleh petugas.',
                 3,
             ],
-            'served' => [
+            'completed' => [
                 'Selesai',
                 'bg-emerald-400 text-emerald-950',
                 'Proses pelayanan antrean telah selesai.',
@@ -453,12 +453,12 @@
                         'bg-blue-50 text-blue-700',
                         'bg-blue-500',
                     ],
-                    'serving', 'in_service' => [
+                    'serving' => [
                         'Sedang Dilayani',
                         'bg-violet-50 text-violet-700',
                         'bg-violet-500',
                     ],
-                    'served' => [
+                    'completed' => [
                         'Selesai',
                         'bg-emerald-50 text-emerald-700',
                         'bg-emerald-500',
