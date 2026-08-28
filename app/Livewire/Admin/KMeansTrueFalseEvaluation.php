@@ -36,8 +36,7 @@ class KMeansTrueFalseEvaluation extends Component implements HasActions, HasSche
 
                 TextColumn::make('year')
                     ->label('Tahun')
-                    ->alignCenter()
-                    ->sortable(),
+                    ->alignCenter(),
 
                 TextColumn::make('month')
                     ->label('Bulan')
@@ -49,13 +48,13 @@ class KMeansTrueFalseEvaluation extends Component implements HasActions, HasSche
 
                 TextColumn::make('jumlah_pelayanan')
                     ->label('Jumlah Pelayanan')
-                    ->alignCenter()
-                    ->numeric(),
+                    ->numeric()
+                    ->alignCenter(),
 
                 TextColumn::make('hari_aktif')
                     ->label('Hari Aktif')
-                    ->alignCenter()
-                    ->numeric(),
+                    ->numeric()
+                    ->alignCenter(),
 
                 TextColumn::make('cluster_label')
                     ->label('Hasil K-Means')
@@ -85,7 +84,7 @@ class KMeansTrueFalseEvaluation extends Component implements HasActions, HasSche
                     ),
 
                 TextColumn::make('hasil_evaluasi')
-                    ->label('Hasil')
+                    ->label('Evaluasi')
                     ->alignCenter()
                     ->state(function (KMeansResult $record): string {
                         if (! in_array(
@@ -113,7 +112,6 @@ class KMeansTrueFalseEvaluation extends Component implements HasActions, HasSche
                 Action::make('isiLabel')
                     ->label('Isi Label')
                     ->icon('heroicon-o-pencil-square')
-                    ->color('primary')
                     ->url(
                         fn (KMeansResult $record): string =>
                             url(
@@ -132,16 +130,10 @@ class KMeansTrueFalseEvaluation extends Component implements HasActions, HasSche
                     ),
             ])
             ->defaultSort('dataset_name')
-            ->paginated([
-                10,
-                25,
-            ])
+            ->paginated([10, 25])
             ->defaultPaginationPageOption(10)
             ->emptyStateHeading('Belum ada hasil K-Means')
-            ->emptyStateDescription(
-                'Belum tersedia data hasil clustering untuk diuji.'
-            )
-            ->emptyStateIcon('heroicon-o-table-cells');
+            ->emptyStateIcon('heroicon-o-chart-bar-square');
     }
 
     private function getResultsQuery(): Builder
@@ -152,8 +144,7 @@ class KMeansTrueFalseEvaluation extends Component implements HasActions, HasSche
             ->value('id');
 
         if (! $runId) {
-            return KMeansResult::query()
-                ->whereRaw('1 = 0');
+            return KMeansResult::query()->whereRaw('1 = 0');
         }
 
         return KMeansResult::query()
@@ -195,32 +186,56 @@ class KMeansTrueFalseEvaluation extends Component implements HasActions, HasSche
         $ready = $results->count() > 0
             && $validated->count() === $results->count();
 
+        $matrix = [];
+
+        foreach ($labels as $actual) {
+            foreach ($labels as $predicted) {
+                $matrix[$actual][$predicted] = $ready
+                    ? $validated
+                        ->filter(
+                            fn (KMeansResult $row): bool =>
+                                $row->reference_label === $actual
+                                && $row->cluster_label === $predicted
+                        )
+                        ->count()
+                    : null;
+            }
+        }
+
         $metrics = [];
 
         foreach ($labels as $label) {
-            $tp = $validated->filter(
-                fn (KMeansResult $row): bool =>
-                    $row->reference_label === $label
-                    && $row->cluster_label === $label
-            )->count();
+            $tp = $validated
+                ->filter(
+                    fn (KMeansResult $row): bool =>
+                        $row->reference_label === $label
+                        && $row->cluster_label === $label
+                )
+                ->count();
 
-            $fn = $validated->filter(
-                fn (KMeansResult $row): bool =>
-                    $row->reference_label === $label
-                    && $row->cluster_label !== $label
-            )->count();
+            $fn = $validated
+                ->filter(
+                    fn (KMeansResult $row): bool =>
+                        $row->reference_label === $label
+                        && $row->cluster_label !== $label
+                )
+                ->count();
 
-            $fp = $validated->filter(
-                fn (KMeansResult $row): bool =>
-                    $row->reference_label !== $label
-                    && $row->cluster_label === $label
-            )->count();
+            $fp = $validated
+                ->filter(
+                    fn (KMeansResult $row): bool =>
+                        $row->reference_label !== $label
+                        && $row->cluster_label === $label
+                )
+                ->count();
 
-            $tn = $validated->filter(
-                fn (KMeansResult $row): bool =>
-                    $row->reference_label !== $label
-                    && $row->cluster_label !== $label
-            )->count();
+            $tn = $validated
+                ->filter(
+                    fn (KMeansResult $row): bool =>
+                        $row->reference_label !== $label
+                        && $row->cluster_label !== $label
+                )
+                ->count();
 
             $total = $tp + $tn + $fp + $fn;
 
@@ -268,6 +283,27 @@ class KMeansTrueFalseEvaluation extends Component implements HasActions, HasSche
             ? ($correct / max(1, $validated->count())) * 100
             : null;
 
+        $macroPrecision = $ready
+            ? collect($metrics)
+                ->pluck('precision')
+                ->filter(fn ($value) => $value !== null)
+                ->avg()
+            : null;
+
+        $macroRecall = $ready
+            ? collect($metrics)
+                ->pluck('recall')
+                ->filter(fn ($value) => $value !== null)
+                ->avg()
+            : null;
+
+        $macroF1 = $ready
+            ? collect($metrics)
+                ->pluck('f1')
+                ->filter(fn ($value) => $value !== null)
+                ->avg()
+            : null;
+
         return view(
             'livewire.admin.k-means-true-false-evaluation',
             [
@@ -275,9 +311,14 @@ class KMeansTrueFalseEvaluation extends Component implements HasActions, HasSche
                 'results' => $results,
                 'validated' => $validated,
                 'labels' => $labels,
+                'matrix' => $matrix,
                 'metrics' => $metrics,
                 'ready' => $ready,
                 'overallAccuracy' => $overallAccuracy,
+                'macroPrecision' => $macroPrecision,
+                'macroRecall' => $macroRecall,
+                'macroF1' => $macroF1,
+                'correct' => $correct,
             ]
         );
     }
