@@ -90,3 +90,9 @@ Route::middleware('auth:admin')
             [\App\Http\Controllers\Admin\DokumenPermohonanAdminController::class, 'show'],
         )->name('permohonan.dokumen.open');
     });
+
+
+Route::get(
+    '/galeri/{gallery}',
+    [\App\Http\Controllers\Pengunjung\GaleriController::class, 'show']
+)->name('pengunjung.galeri.show');
