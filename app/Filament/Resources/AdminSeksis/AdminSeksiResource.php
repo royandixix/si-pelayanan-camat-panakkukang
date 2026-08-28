@@ -71,9 +71,9 @@ class AdminSeksiResource extends Resource
                         TextInput::make('nik')
                             ->label('NIK')
                             ->required()
-                            ->numeric()
-                            ->minLength(16)
-                            ->maxLength(20)
+                            ->inputMode('numeric')
+                            ->rules(['regex:/^[0-9]{16}$/'])
+                            ->length(16)
                             ->unique(ignoreRecord: true),
 
                         TextInput::make('email')

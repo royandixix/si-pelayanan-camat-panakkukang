@@ -75,7 +75,8 @@ class UserForm
 
                 TextInput::make('nik')
                     ->label('NIK')
-                    ->numeric()
+                    ->inputMode('numeric')
+                    ->rules(['regex:/^[0-9]{16}$/'])
                     ->length(16)
                     ->unique(ignoreRecord: true),
 
