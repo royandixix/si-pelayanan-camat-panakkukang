@@ -36,7 +36,7 @@ class BeritaController extends Controller
             ->active()
             ->published()
             ->whereKeyNot($berita->id)
-            ->latest('published_at')
+            ->orderByDesc('published_at')
             ->limit(3)
             ->get();
 
