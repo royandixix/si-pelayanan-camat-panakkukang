@@ -26,6 +26,11 @@ Route::get('/profil', [ProfilKecamatanController::class, 'index'])->name('profil
 Route::get('/profil/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
 Route::get('/layanan', [LayananPengunjungController::class, 'index'])->name('layanan');
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita');
+
+Route::get(
+    '/berita/{berita:slug}',
+    [BeritaController::class, 'show']
+)->name('berita.show');
 Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri');
 Route::get('/kontak', [KontakController::class, 'index'])->name('kontak');
 
