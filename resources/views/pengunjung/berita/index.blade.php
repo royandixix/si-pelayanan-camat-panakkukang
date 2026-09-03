@@ -6,8 +6,8 @@
 <style>
     .public-news-link {
         display: block;
-        color: inherit;
         text-decoration: none;
+        color: inherit;
         transition: transform .25s ease, box-shadow .25s ease;
     }
 
@@ -46,23 +46,21 @@
         <div class="public-news-grid" style="margin-top:55px;">
             @forelse($berita as $item)
                 @php
-                    $gambar = $item->image;
-
-                    if (
-                        $gambar
-                        && (
-                            str_starts_with($gambar, 'http://')
-                            || str_starts_with($gambar, 'https://')
-                        )
-                    ) {
-                        $srcGambar = $gambar;
-                    } elseif (
-                        $gambar
-                        && str_starts_with($gambar, 'img/')
-                    ) {
-                        $srcGambar = asset($gambar);
-                    } elseif ($gambar) {
-                        $srcGambar = asset('storage/'.$gambar);
+                    if ($item->image) {
+                        if (
+                            str_starts_with($item->image, 'http://')
+                            || str_starts_with($item->image, 'https://')
+                        ) {
+                            $srcGambar = $item->image;
+                        } elseif (
+                            str_starts_with($item->image, 'img/')
+                        ) {
+                            $srcGambar = asset($item->image);
+                        } else {
+                            $srcGambar = asset(
+                                'storage/'.$item->image
+                            );
+                        }
                     } else {
                         $srcGambar = null;
                     }
@@ -106,7 +104,7 @@
                                     margin-top:8px;
                                     font-size:11px;
                                     font-weight:700;
-                                    color:#b7791f;
+                                    color:#c58a24;
                                     text-transform:uppercase;
                                     letter-spacing:.08em;
                                 "
@@ -115,53 +113,48 @@
                             </div>
                         @endif
 
-                        <h3>{{ $item->title }}</h3>
+                        <h3>
+                            {{ $item->title }}
+                        </h3>
 
                         <p
                             class="public-copy"
                             style="font-size:12px;"
                         >
-                            {{
-                                \Illuminate\Support\Str::limit(
-                                    strip_tags(
-                                        $item->excerpt
-                                        ?: $item->content
-                                        ?: 'Informasi terbaru Kecamatan Panakkukang.'
-                                    ),
-                                    145
-                                )
-                            }}
+                            {{ \Illuminate\Support\Str::limit(
+                                strip_tags(
+                                    $item->excerpt
+                                    ?: $item->content
+                                ),
+                                145
+                            ) }}
                         </p>
                     </div>
                 </a>
             @empty
                 <div
-                    class="public-card"
                     style="
                         grid-column:1/-1;
+                        padding:55px 30px;
                         text-align:center;
-                        padding:60px 30px;
+                        border-radius:20px;
+                        background:#f4f7f9;
+                        color:#64748b;
                     "
                 >
-                    <div class="public-icon" style="margin:0 auto 18px;">
-                        <svg
-                            width="28"
-                            height="28"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                        >
-                            <path d="M4 5h16v14H4zM8 9h8M8 13h8M8 17h5"/>
-                        </svg>
-                    </div>
+                    <strong
+                        style="
+                            display:block;
+                            color:#193753;
+                            font-size:20px;
+                            margin-bottom:8px;
+                        "
+                    >
+                        Belum Ada Berita
+                    </strong>
 
-                    <h3>Belum Ada Berita</h3>
-
-                    <p class="public-copy">
-                        Berita dan informasi akan ditampilkan setelah
-                        ditambahkan oleh Super Admin.
-                    </p>
+                    Berita akan ditampilkan setelah dipublikasikan
+                    oleh Super Admin.
                 </div>
             @endforelse
         </div>
