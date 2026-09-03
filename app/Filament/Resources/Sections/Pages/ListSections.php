@@ -11,7 +11,6 @@ class ListSections extends ListRecords
     protected static string $resource = SectionResource::class;
 
     protected static ?string $title = 'Daftar Seksi';
-
     protected function getHeaderActions(): array
     {
         return [
